@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Wine, Plus, BarChart3, Calendar, Smile, Meh, Share2, Copy, Check, Edit } from "lucide-react"
 import { Link } from 'react-router-dom'
+import logo from '@/images/logo.png'
 
 export default function DashboardPage() {
     const [inviteLink, setInviteLink] = useState("")
@@ -81,7 +82,7 @@ export default function DashboardPage() {
             <header className="px-4 py-6 border-b border-muted">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <Wine className="h-6 w-6 text-primary" />
+                        <img src={logo} alt="YoiYoi Logo" className="h-6 w-6" />
                         <h1 className="text-xl font-bold">YoiYoi</h1>
                     </div>
                     <Link href="/stats">
@@ -225,7 +226,7 @@ export default function DashboardPage() {
                 <Link to ="/timeline">
                     <Card className="bg-card border-muted cursor-pointer hover:bg-muted/50 transition-colors">
                         <CardContent className="p-4 text-center">
-                            <Wine className="h-8 w-8 text-secondary mx-auto mb-2" />
+                            <img src={logo} alt="YoiYoi Logo" className="h-8 w-8 text-secondary mx-auto mb-2" />
                             <div className="text-sm font-medium">タイムラインを見る</div>
                             <div className="text-xs text-muted-foreground mt-1">友達の投稿をチェック</div>
                         </CardContent>

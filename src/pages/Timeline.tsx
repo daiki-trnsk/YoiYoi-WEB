@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Wine, Heart, MessageCircle, Share2, Smile, Meh, Frown, Filter, Users, UserPlus, Search } from "lucide-react"
 import { Link } from "react-router-dom"
+import logo from '@/images/logo.png'
 
 
 export default function TimelinePage() {
@@ -123,7 +124,7 @@ export default function TimelinePage() {
             <header className="px-4 py-6 border-b border-muted sticky top-0 bg-background z-10">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <Wine className="h-6 w-6 text-primary" />
+                        <img src={logo} alt="YoiYoi Logo" className="h-6 w-6" />
                         <h1 className="text-xl font-bold">YoiYoi</h1>
                     </div>
                     <Button variant="ghost" size="sm">
@@ -277,7 +278,7 @@ export default function TimelinePage() {
                                     <div className="mt-2 rounded-xl overflow-hidden bg-muted/50">
                                         <div className="aspect-[4/3] bg-muted/50 flex items-center justify-center">
                                             <div className="text-center space-y-2">
-                                                <Wine className="h-8 w-8 text-primary mx-auto opacity-50" />
+                                                <img src={logo} alt="YoiYoi Logo" className="h-8 w-8 opacity-50" />
                                                 <p className="text-xs text-muted-foreground">投稿画像</p>
                                             </div>
                                         </div>

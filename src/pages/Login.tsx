@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Wine } from "lucide-react"
 import { Link, useNavigate } from "react-router-dom"
+import logo from '@/images/logo.png'
 
 export default function Login() {
     const navigate = useNavigate()
@@ -22,7 +23,7 @@ export default function Login() {
             <div className="container max-w-md mx-auto px-4 py-8">
                 <div className="flex flex-col items-center space-y-8">
                     <div className="flex items-center gap-2">
-                        <Wine className="h-8 w-8 text-primary" />
+                        <img src={logo} alt="YoiYoi Logo" className="h-8 w-8" />
                         <h1 className="text-2xl font-bold">YoiYoi</h1>
                     </div>
 
