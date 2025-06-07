@@ -1,66 +1,57 @@
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Wine, MessageCircle, User } from "lucide-react"
-import { Link } from "react-router-dom"
+import { Card, CardContent } from "@/components/ui/card"
+import { Wine } from "lucide-react"
+import { Link, useNavigate } from "react-router-dom"
 
+export default function Login() {
+    const navigate = useNavigate()
 
-export default function LoginPage() {
+    const handleGoogleLogin = async () => {
+        try {
+            // TODO: 実際のGoogleログイン処理を実装
+            console.log("Googleログインを開始します")
+            // 仮のログイン成功処理
+            navigate("/home")
+        } catch (error) {
+            console.error("ログインに失敗しました:", error)
+        }
+    }
+
     return (
-        <div className="min-h-screen bg-background text-foreground flex items-center justify-center px-4">
-            <div className="w-full max-w-md space-y-8">
-                {/* Logo */}
-                <div className="text-center">
-                    <div className="flex items-center justify-center gap-2 mb-4">
-                        <Wine className="h-10 w-10 text-primary" />
-                        <h1 className="text-3xl font-bold">YoiYoi</h1>
+        <div className="min-h-screen bg-background text-foreground">
+            <div className="container max-w-md mx-auto px-4 py-8">
+                <div className="flex flex-col items-center space-y-8">
+                    <div className="flex items-center gap-2">
+                        <Wine className="h-8 w-8 text-primary" />
+                        <h1 className="text-2xl font-bold">YoiYoi</h1>
                     </div>
-                    <p className="text-muted-foreground">ログインして始める</p>
-                </div>
 
-                {/* Login Card */}
-                <Card className="bg-card border-muted shadow-lg">
-                    <CardHeader className="text-center pb-4">
-                        <CardTitle className="text-xl">アカウント認証</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        {/* LINE Login */}
-                        <Link to ="/home">
-                            <Button
-                                className="w-full bg-[#00B900] hover:bg-[#00A000] text-white font-semibold py-4 rounded-xl flex items-center gap-3"
-                                size="lg"
-                            >
-                                <MessageCircle className="h-5 w-5" />
-                                LINEでログイン
-                            </Button>
-                        </Link>
+                    <Card className="w-full">
+                        <CardContent className="p-6 space-y-4">
+                            <h2 className="text-xl font-semibold text-center">ログイン</h2>
+                            <div className="space-y-4">
+                                <Button 
+                                    className="w-full" 
+                                    variant="outline"
+                                    onClick={handleGoogleLogin}
+                                >
+                                    Googleでログイン
+                                </Button>
+                                <Button className="w-full" variant="outline">
+                                    Appleでログイン
+                                </Button>
+                            </div>
+                            <div className="text-center text-sm text-muted-foreground">
+                                <p>アカウントをお持ちでない方は</p>
+                                <Link to="/signup" className="text-primary hover:underline">
+                                    新規登録
+                                </Link>
+                            </div>
+                        </CardContent>
+                    </Card>
 
-                        {/* Guest Login */}
-                        <Link to ="/home">
-                            <Button
-                                variant="outline"
-                                className="w-full border-muted hover:bg-muted text-foreground font-semibold py-4 rounded-xl flex items-center gap-3"
-                                size="lg"
-                            >
-                                <User className="h-5 w-5" />
-                                ゲストで始める
-                            </Button>
-                        </Link>
-
-                        {/* Info */}
-                        <div className="pt-4 text-center">
-                            <p className="text-sm text-muted-foreground leading-relaxed">
-                                このアプリではあなたの飲酒記録を
-                                <br />
-                                安全に管理します
-                            </p>
-                        </div>
-                    </CardContent>
-                </Card>
-
-                {/* Back to Home */}
-                <div className="text-center">
-                    <Link to ="/" className="text-sm text-muted-foreground hover:text-foreground">
-                        ← トップページに戻る
+                    <Link to="/" className="text-sm text-muted-foreground hover:text-foreground">
+                        トップページに戻る
                     </Link>
                 </div>
             </div>

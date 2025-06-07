@@ -1,9 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Home from "./pages/Home"
 import Login from "./pages/Login"
-import LogNew from "./pages/LogNew"
-import Stats from "./pages/Stats"
-import Timeline from "./pages/Timeline"
+import Terms from "./pages/Terms"
+import Privacy from "./pages/Privacy"
+import Contact from "./pages/Contact"
+import HomePage from "./pages/HomePage"
+import Signup from "./pages/Signup"
 
 function App() {
   return (
@@ -11,9 +13,11 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/lognew" element={<LogNew />} />
-        <Route path="/stats" element={<Stats />} />
-        <Route path="/timeline" element={<Timeline />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/home" element={<HomePage />} />
       </Routes>
     </BrowserRouter>
   )
