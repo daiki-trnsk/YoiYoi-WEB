@@ -6,6 +6,9 @@ import Privacy from "./pages/Privacy"
 import Contact from "./pages/Contact"
 import HomePage from "./pages/HomePage"
 import Signup from "./pages/Signup"
+import Timeline from "./pages/Timeline"
+import Stats from "./pages/Stats"
+import LogNew from "./pages/LogNew"
 
 function App() {
   return (
@@ -18,6 +21,9 @@ function App() {
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/home" element={<HomePage />} />
+        <Route path="/timeline" element={<Timeline />} />
+        <Route path="/stats" element={<Stats />} />
+        <Route path="/log/new" element={<LogNew />} />
       </Routes>
     </BrowserRouter>
   )

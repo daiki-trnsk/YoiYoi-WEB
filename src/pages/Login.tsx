@@ -1,20 +1,48 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { Wine } from "lucide-react"
 import { Link, useNavigate } from "react-router-dom"
+import { useState } from "react"
 
 export default function Login() {
     const navigate = useNavigate()
+    const [formData, setFormData] = useState({
+        email: "",
+        password: ""
+    })
 
-    const handleGoogleLogin = async () => {
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
         try {
-            // TODO: 実際のGoogleログイン処理を実装
-            console.log("Googleログインを開始します")
+            // TODO: 実際のログイン処理を実装
+            console.log("ログインを開始します", formData)
             // 仮のログイン成功処理
             navigate("/home")
         } catch (error) {
             console.error("ログインに失敗しました:", error)
         }
+    }
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }))
+    }
+
+    const handleGoogleLogin = () => {
+        // TODO: Googleログイン処理を実装
+        console.log("Googleログインを開始します")
+        navigate("/home")
+    }
+
+    const handleAppleLogin = () => {
+        // TODO: Appleログイン処理を実装
+        console.log("Appleログインを開始します")
+        navigate("/home")
     }
 
     return (
@@ -29,18 +57,67 @@ export default function Login() {
                     <Card className="w-full">
                         <CardContent className="p-6 space-y-4">
                             <h2 className="text-xl font-semibold text-center">ログイン</h2>
-                            <div className="space-y-4">
-                                <Button 
-                                    className="w-full" 
+
+                            <form onSubmit={handleSubmit} className="space-y-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="email">メールアドレス</Label>
+                                    <Input
+                                        id="email"
+                                        name="email"
+                                        type="email"
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                        placeholder="example@email.com"
+                                        required
+                                    />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="password">パスワード</Label>
+                                    <Input
+                                        id="password"
+                                        name="password"
+                                        type="password"
+                                        value={formData.password}
+                                        onChange={handleChange}
+                                        placeholder="パスワードを入力"
+                                        required
+                                    />
+                                </div>
+
+                                <Button type="submit" className="w-full">
+                                    ログイン
+                                </Button>
+                            </form>
+
+                            <div className="relative">
+                                <div className="absolute inset-0 flex items-center">
+                                    <span className="w-full border-t" />
+                                </div>
+                                <div className="relative flex justify-center text-xs uppercase">
+                                    <span className="bg-background px-2 text-muted-foreground">
+                                        または
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Button
                                     variant="outline"
+                                    className="w-full"
                                     onClick={handleGoogleLogin}
                                 >
                                     Googleでログイン
                                 </Button>
-                                <Button className="w-full" variant="outline">
+                                <Button
+                                    variant="outline"
+                                    className="w-full"
+                                    onClick={handleAppleLogin}
+                                >
                                     Appleでログイン
                                 </Button>
                             </div>
+
                             <div className="text-center text-sm text-muted-foreground">
                                 <p>アカウントをお持ちでない方は</p>
                                 <Link to="/signup" className="text-primary hover:underline">
