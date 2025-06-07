@@ -10,7 +10,8 @@ import { Switch } from "@/components/ui/switch"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ArrowLeft, Plus, X, Camera, Smile, Meh, Frown, Hash } from "lucide-react"
-import Link from "next/link"
+import { Link } from "react-router-dom"
+
 
 export default function NewLogPage() {
     const [drinks, setDrinks] = useState([{ name: "", amount: "", unit: "", strength: "" }])
@@ -112,7 +113,7 @@ export default function NewLogPage() {
             {/* Header */}
             <header className="px-4 py-6 border-b border-muted">
                 <div className="flex items-center gap-4">
-                    <Link href="/home">
+                    <Link to ="/home">
                         <Button variant="ghost" size="sm">
                             <ArrowLeft className="h-4 w-4" />
                         </Button>
@@ -391,7 +392,7 @@ export default function NewLogPage() {
 
             {/* Save Button */}
             <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t border-muted">
-                <Link href="/home">
+                <Link to ="/home">
                     <Button
                         size="lg"
                         className="w-full bg-primary hover:bg-accent text-primary-foreground font-semibold py-4 rounded-xl"

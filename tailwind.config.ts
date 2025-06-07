@@ -9,7 +9,6 @@ const config: Config = {
         "./src/**/*.{ts,tsx}",
         "*.{js,ts,jsx,tsx,mdx}",
     ],
-    prefix: "",
     theme: {
         container: {
             center: true,
@@ -23,35 +22,35 @@ const config: Config = {
                 border: "hsl(var(--border))",
                 input: "hsl(var(--input))",
                 ring: "hsl(var(--ring))",
-                background: "#1A1A1A",
-                foreground: "#F5F5F5",
+                background: "hsl(var(--background))",     // ← 修正
+                foreground: "hsl(var(--foreground))",     // ← 修正
                 primary: {
-                    DEFAULT: "#E03C31",
-                    foreground: "#F5F5F5",
+                    DEFAULT: "hsl(var(--primary))",         // ← 修正
+                    foreground: "hsl(var(--primary-foreground))",
                 },
                 secondary: {
-                    DEFAULT: "#F2C94C",
-                    foreground: "#1A1A1A",
+                    DEFAULT: "hsl(var(--secondary))",       // ← 修正
+                    foreground: "hsl(var(--secondary-foreground))",
                 },
                 destructive: {
                     DEFAULT: "hsl(var(--destructive))",
                     foreground: "hsl(var(--destructive-foreground))",
                 },
                 muted: {
-                    DEFAULT: "#2A2A2A",
-                    foreground: "#999999",
+                    DEFAULT: "hsl(var(--muted))",           // ← 修正
+                    foreground: "hsl(var(--muted-foreground))",
                 },
                 accent: {
-                    DEFAULT: "#FF5C5C",
-                    foreground: "#F5F5F5",
+                    DEFAULT: "hsl(var(--accent))",          // ← 修正
+                    foreground: "hsl(var(--accent-foreground))",
                 },
                 popover: {
-                    DEFAULT: "#2A2A2A",
-                    foreground: "#F5F5F5",
+                    DEFAULT: "hsl(var(--popover))",         // ← 修正
+                    foreground: "hsl(var(--popover-foreground))",
                 },
                 card: {
-                    DEFAULT: "#2A2A2A",
-                    foreground: "#F5F5F5",
+                    DEFAULT: "hsl(var(--card))",            // ← 修正
+                    foreground: "hsl(var(--card-foreground))",
                 },
             },
             borderRadius: {

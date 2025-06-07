@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, Calendar, TrendingUp } from "lucide-react"
-import Link from "next/link"
+import { Link } from "react-router-dom"
+
 
 export default function StatsPage() {
     const [period, setPeriod] = useState<"week" | "month">("week")
@@ -164,13 +165,13 @@ export default function StatsPage() {
             {/* Bottom Navigation */}
             <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-muted">
                 <div className="flex">
-                    <Link href="/home" className="flex-1 p-4 text-center">
+                    <Link to ="/home" className="flex-1 p-4 text-center">
                         <div className="text-muted-foreground">ホーム</div>
                     </Link>
-                    <Link href="/timeline" className="flex-1 p-4 text-center">
+                    <Link to ="/timeline" className="flex-1 p-4 text-center">
                         <div className="text-muted-foreground">タイムライン</div>
                     </Link>
-                    <Link href="/stats" className="flex-1 p-4 text-center">
+                    <Link to ="/stats" className="flex-1 p-4 text-center">
                         <div className="text-primary">統計</div>
                     </Link>
                 </div>

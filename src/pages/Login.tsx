@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Wine, MessageCircle, User } from "lucide-react"
-import Link from "next/link"
+import { Link } from "react-router-dom"
+
 
 export default function LoginPage() {
     return (
@@ -23,7 +24,7 @@ export default function LoginPage() {
                     </CardHeader>
                     <CardContent className="space-y-4">
                         {/* LINE Login */}
-                        <Link href="/home">
+                        <Link to ="/home">
                             <Button
                                 className="w-full bg-[#00B900] hover:bg-[#00A000] text-white font-semibold py-4 rounded-xl flex items-center gap-3"
                                 size="lg"
@@ -34,7 +35,7 @@ export default function LoginPage() {
                         </Link>
 
                         {/* Guest Login */}
-                        <Link href="/home">
+                        <Link to ="/home">
                             <Button
                                 variant="outline"
                                 className="w-full border-muted hover:bg-muted text-foreground font-semibold py-4 rounded-xl flex items-center gap-3"
@@ -58,7 +59,7 @@ export default function LoginPage() {
 
                 {/* Back to Home */}
                 <div className="text-center">
-                    <Link href="/" className="text-sm text-muted-foreground hover:text-foreground">
+                    <Link to ="/" className="text-sm text-muted-foreground hover:text-foreground">
                         ← トップページに戻る
                     </Link>
                 </div>

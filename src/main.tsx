@@ -2,6 +2,11 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Wine, BarChart3, Users, Shield } from "lucide-react"
+import { Link } from 'react-router-dom'
+
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -9,10 +14,7 @@ createRoot(document.getElementById('root')!).render(
   </StrictMode>,
 )
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Wine, BarChart3, Users, Shield } from "lucide-react"
-import Link from "next/link"
+
 
 export default function HomePage() {
   return (
@@ -85,7 +87,7 @@ export default function HomePage() {
 
           {/* CTA Button */}
           <div className="space-y-4">
-            <Link href="/login">
+            <Link to ="/login">
               <Button
                 size="lg"
                 className="w-full bg-primary hover:bg-accent text-primary-foreground font-semibold py-4 rounded-xl shadow-lg"
@@ -102,13 +104,13 @@ export default function HomePage() {
         <div className="max-w-md mx-auto text-center text-sm text-muted-foreground">
           <p>© 2024 YoiYoi 飲酒記録アプリ</p>
           <div className="flex justify-center gap-4 mt-2">
-            <Link href="#" className="hover:text-foreground">
+            <Link to ="#" className="hover:text-foreground">
               利用規約
             </Link>
-            <Link href="#" className="hover:text-foreground">
+            <Link to ="#" className="hover:text-foreground">
               プライバシー
             </Link>
-            <Link href="#" className="hover:text-foreground">
+            <Link to ="#" className="hover:text-foreground">
               お問い合わせ
             </Link>
           </div>

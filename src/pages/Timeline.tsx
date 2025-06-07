@@ -8,7 +8,8 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Wine, Heart, MessageCircle, Share2, Smile, Meh, Frown, Filter, Users, UserPlus, Search } from "lucide-react"
-import Link from "next/link"
+import { Link } from "react-router-dom"
+
 
 export default function TimelinePage() {
     const [likedPosts, setLikedPosts] = useState<number[]>([])
@@ -330,13 +331,13 @@ export default function TimelinePage() {
             {/* Bottom Navigation */}
             <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-muted">
                 <div className="flex">
-                    <Link href="/home" className="flex-1 p-4 text-center">
+                    <Link to ="/home" className="flex-1 p-4 text-center">
                         <div className="text-muted-foreground">ホーム</div>
                     </Link>
-                    <Link href="/timeline" className="flex-1 p-4 text-center">
+                    <Link to ="/timeline" className="flex-1 p-4 text-center">
                         <div className="text-primary">タイムライン</div>
                     </Link>
-                    <Link href="/stats" className="flex-1 p-4 text-center">
+                    <Link to ="/stats" className="flex-1 p-4 text-center">
                         <div className="text-muted-foreground">統計</div>
                     </Link>
                 </div>

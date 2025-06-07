@@ -10,7 +10,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Wine, Plus, BarChart3, Calendar, Smile, Meh, Share2, Copy, Check, Edit } from "lucide-react"
-import Link from "next/link"
+import { Link } from "react-router-dom"
+
 
 export default function DashboardPage() {
     const [inviteLink, setInviteLink] = useState("")
@@ -84,7 +85,7 @@ export default function DashboardPage() {
                         <Wine className="h-6 w-6 text-primary" />
                         <h1 className="text-xl font-bold">YoiYoi</h1>
                     </div>
-                    <Link href="/stats">
+                    <Link to ="/stats">
                         <Button variant="ghost" size="sm">
                             <BarChart3 className="h-4 w-4" />
                         </Button>
@@ -222,7 +223,7 @@ export default function DashboardPage() {
                 </Card>
 
                 {/* Quick Action - Timeline Link */}
-                <Link href="/timeline">
+                <Link to ="/timeline">
                     <Card className="bg-card border-muted cursor-pointer hover:bg-muted/50 transition-colors">
                         <CardContent className="p-4 text-center">
                             <Wine className="h-8 w-8 text-secondary mx-auto mb-2" />
@@ -329,7 +330,7 @@ export default function DashboardPage() {
             </Dialog>
 
             {/* Floating Action Button */}
-            <Link href="/log/new">
+            <Link to ="/log/new">
                 <Button
                     size="lg"
                     className="fixed bottom-20 right-6 h-16 w-16 rounded-full bg-primary hover:bg-accent shadow-xl border-4 border-background z-10"
@@ -341,13 +342,13 @@ export default function DashboardPage() {
             {/* Bottom Navigation */}
             <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-muted">
                 <div className="flex">
-                    <Link href="/home" className="flex-1 p-4 text-center">
+                    <Link to ="/home" className="flex-1 p-4 text-center">
                         <div className="text-primary">ホーム</div>
                     </Link>
-                    <Link href="/timeline" className="flex-1 p-4 text-center">
+                    <Link to ="/timeline" className="flex-1 p-4 text-center">
                         <div className="text-muted-foreground">タイムライン</div>
                     </Link>
-                    <Link href="/stats" className="flex-1 p-4 text-center">
+                    <Link to ="/stats" className="flex-1 p-4 text-center">
                         <div className="text-muted-foreground">統計</div>
                     </Link>
                 </div>
