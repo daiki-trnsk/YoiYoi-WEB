@@ -13,7 +13,7 @@ import { Wine, Plus, BarChart3, Calendar, Smile, Meh, Share2, Copy, Check, Edit 
 import { Link } from 'react-router-dom'
 import logo from '@/images/logo.png'
 
-export default function DashboardPage() {
+export default function HomePage() {
     const [inviteLink, setInviteLink] = useState("")
     const [linkCopied, setLinkCopied] = useState(false)
     const [showInviteDialog, setShowInviteDialog] = useState(false)
@@ -85,7 +85,7 @@ export default function DashboardPage() {
                         <img src={logo} alt="YoiYoi Logo" className="h-6 w-6" />
                         <h1 className="text-xl font-bold">YoiYoi</h1>
                     </div>
-                    <Link href="/stats">
+                    <Link to="/stats">
                         <Button variant="ghost" size="sm">
                             <BarChart3 className="h-4 w-4" />
                         </Button>
@@ -125,7 +125,7 @@ export default function DashboardPage() {
                                                 <Input
                                                     id="name"
                                                     value={profile.name}
-                                                    onChange={(e) => setProfile({ ...profile, name: e.target.value })}
+                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setProfile({ ...profile, name: e.target.value })}
                                                     className="mt-2 bg-muted border-muted"
                                                 />
                                             </div>
@@ -134,7 +134,7 @@ export default function DashboardPage() {
                                                 <Textarea
                                                     id="bio"
                                                     value={profile.bio}
-                                                    onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
+                                                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setProfile({ ...profile, bio: e.target.value })}
                                                     className="mt-2 bg-muted border-muted resize-none"
                                                     rows={2}
                                                 />
@@ -144,7 +144,7 @@ export default function DashboardPage() {
                                                 <Input
                                                     id="favorite-drink"
                                                     value={profile.favoriteDrink}
-                                                    onChange={(e) => setProfile({ ...profile, favoriteDrink: e.target.value })}
+                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setProfile({ ...profile, favoriteDrink: e.target.value })}
                                                     className="mt-2 bg-muted border-muted"
                                                     placeholder="例：クラフトビール、日本酒"
                                                 />
@@ -154,7 +154,7 @@ export default function DashboardPage() {
                                                 <Input
                                                     id="motto"
                                                     value={profile.motto}
-                                                    onChange={(e) => setProfile({ ...profile, motto: e.target.value })}
+                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setProfile({ ...profile, motto: e.target.value })}
                                                     className="mt-2 bg-muted border-muted"
                                                     placeholder="例：適度に楽しく、安全第一"
                                                 />
@@ -164,7 +164,7 @@ export default function DashboardPage() {
                                                 <Input
                                                     id="drinking-history"
                                                     value={profile.drinkingHistory}
-                                                    onChange={(e) => setProfile({ ...profile, drinkingHistory: e.target.value })}
+                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setProfile({ ...profile, drinkingHistory: e.target.value })}
                                                     className="mt-2 bg-muted border-muted"
                                                     placeholder="例：3年、10年"
                                                 />
@@ -174,7 +174,7 @@ export default function DashboardPage() {
                                                 <Input
                                                     id="favorite-style"
                                                     value={profile.favoriteStyle}
-                                                    onChange={(e) => setProfile({ ...profile, favoriteStyle: e.target.value })}
+                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setProfile({ ...profile, favoriteStyle: e.target.value })}
                                                     className="mt-2 bg-muted border-muted"
                                                     placeholder="例：友達とワイワイ、一人でゆっくり"
                                                 />
@@ -223,7 +223,7 @@ export default function DashboardPage() {
                 </Card>
 
                 {/* Quick Action - Timeline Link */}
-                <Link to ="/timeline">
+                <Link to="/timeline">
                     <Card className="bg-card border-muted cursor-pointer hover:bg-muted/50 transition-colors">
                         <CardContent className="p-4 text-center">
                             <img src={logo} alt="YoiYoi Logo" className="h-8 w-8 text-secondary mx-auto mb-2" />
@@ -330,7 +330,7 @@ export default function DashboardPage() {
             </Dialog>
 
             {/* Floating Action Button */}
-            <Link to ="/log/new">
+            <Link to="/log/new">
                 <Button
                     size="lg"
                     className="fixed bottom-20 right-6 h-16 w-16 rounded-full bg-primary hover:bg-accent shadow-xl border-4 border-background z-10"
@@ -342,13 +342,13 @@ export default function DashboardPage() {
             {/* Bottom Navigation */}
             <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-muted">
                 <div className="flex">
-                    <Link to ="/home" className="flex-1 p-4 text-center">
+                    <Link to="/home" className="flex-1 p-4 text-center">
                         <div className="text-primary">ホーム</div>
                     </Link>
-                    <Link to ="/timeline" className="flex-1 p-4 text-center">
+                    <Link to="/timeline" className="flex-1 p-4 text-center">
                         <div className="text-muted-foreground">タイムライン</div>
                     </Link>
-                    <Link to ="/stats" className="flex-1 p-4 text-center">
+                    <Link to="/stats" className="flex-1 p-4 text-center">
                         <div className="text-muted-foreground">統計</div>
                     </Link>
                 </div>
