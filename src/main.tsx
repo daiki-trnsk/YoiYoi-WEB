@@ -2,8 +2,8 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button.tsx"
+import { Card, CardContent } from "@/components/ui/card.tsx"
 import { Wine, BarChart3, Users, Shield } from "lucide-react"
 import { Link } from 'react-router-dom'
 
