@@ -17,6 +17,7 @@ module.exports = {
         '4xl': ['3.75rem', { lineHeight: '1' }],           // 60px
       },
       fontFamily: {
+        'shippori': ['"Shippori Mincho"', 'serif'],
         sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
       },
       colors: {

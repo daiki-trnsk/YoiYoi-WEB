@@ -12,7 +12,7 @@ import LogNew from "./pages/LogNew"
 
 function App() {
   return (
-    <div className="dark">
+    <div>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
