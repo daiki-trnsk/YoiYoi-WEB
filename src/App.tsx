@@ -12,20 +12,22 @@ import LogNew from "./pages/LogNew"
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/terms" element={<Terms />} />
-        <Route path="/privacy" element={<Privacy />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/timeline" element={<Timeline />} />
-        <Route path="/stats" element={<Stats />} />
-        <Route path="/log/new" element={<LogNew />} />
-      </Routes>
-    </BrowserRouter>
+    <div className="dark">
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/timeline" element={<Timeline />} />
+          <Route path="/stats" element={<Stats />} />
+          <Route path="/log/new" element={<LogNew />} />
+        </Routes>
+      </BrowserRouter>
+    </div>
   )
 }
 
