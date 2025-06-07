@@ -124,7 +124,7 @@ export default function TimelinePage() {
             <header className="px-4 py-6 border-b border-muted sticky top-0 bg-background z-10">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <img src={logo} alt="YoiYoi Logo" className="h-6 w-6" />
+                        <Wine className="h-6 w-6 text-primary" />
                         <h1 className="text-xl font-bold">YoiYoi</h1>
                     </div>
                     <Button variant="ghost" size="sm">
@@ -150,14 +150,14 @@ export default function TimelinePage() {
                                         <Avatar className="h-12 w-12 border-2 border-primary">
                                             <AvatarFallback className="bg-muted">{user.avatar}</AvatarFallback>
                                         </Avatar>
-                                        <span className="text-xs text-center">{user.name}</span>
+                                        <span className="text-sm text-center">{user.name}</span>
                                     </div>
                                 ))}
                                 <div className="flex flex-col items-center gap-2 min-w-[60px]">
                                     <div className="h-12 w-12 border-2 border-dashed border-muted rounded-full flex items-center justify-center">
                                         <UserPlus className="h-5 w-5 text-muted-foreground" />
                                     </div>
-                                    <span className="text-xs text-muted-foreground">追加</span>
+                                    <span className="text-sm text-muted-foreground">追加</span>
                                 </div>
                             </div>
                         </ScrollArea>
@@ -185,7 +185,7 @@ export default function TimelinePage() {
                                     key={tag}
                                     variant="outline"
                                     size="sm"
-                                    className="h-6 text-xs border-muted hover:bg-muted"
+                                    className="h-6 text-sm border-muted hover:bg-muted"
                                     onClick={() => setSearchQuery(tag)}
                                 >
                                     #{tag}
@@ -216,10 +216,10 @@ export default function TimelinePage() {
                                                     </div>
                                                 )}
                                             </div>
-                                            <div className="text-xs text-muted-foreground">{post.date}</div>
+                                            <div className="text-sm text-muted-foreground">{post.date}</div>
 
                                             {/* User Profile Info */}
-                                            <div className="mt-2 text-xs space-y-1">
+                                            <div className="mt-2 text-sm space-y-1">
                                                 <div className="flex items-center gap-2">
                                                     <span className="text-muted-foreground">好きなお酒:</span>
                                                     <span className="text-secondary font-medium">{post.user.favoriteDrink}</span>
@@ -231,7 +231,7 @@ export default function TimelinePage() {
                                             </div>
                                         </div>
                                     </div>
-                                    <Badge variant="secondary" className="text-xs">
+                                    <Badge variant="secondary" className="text-sm">
                                         {post.alcohol}g
                                     </Badge>
                                 </div>
@@ -242,7 +242,7 @@ export default function TimelinePage() {
                                 {/* Drinks */}
                                 <div className="space-y-1">
                                     {post.drinks.map((drink, index) => (
-                                        <div key={index} className="text-sm">
+                                        <div key={index} className="text-base">
                                             {drink}
                                         </div>
                                     ))}
@@ -252,7 +252,7 @@ export default function TimelinePage() {
                                 {post.safetyChecks.length > 0 && (
                                     <div className="flex flex-wrap gap-2">
                                         {post.safetyChecks.map((check, index) => (
-                                            <Badge key={index} variant="outline" className="text-xs bg-muted/50 border-muted">
+                                            <Badge key={index} variant="outline" className="text-sm bg-muted/50 border-muted">
                                                 ✓ {check}
                                             </Badge>
                                         ))}
@@ -279,7 +279,7 @@ export default function TimelinePage() {
                                         <div className="aspect-[4/3] bg-muted/50 flex items-center justify-center">
                                             <div className="text-center space-y-2">
                                                 <img src={logo} alt="YoiYoi Logo" className="h-8 w-8 opacity-50" />
-                                                <p className="text-xs text-muted-foreground">投稿画像</p>
+                                                <p className="text-sm text-muted-foreground">投稿画像</p>
                                             </div>
                                         </div>
                                     </div>
@@ -288,7 +288,7 @@ export default function TimelinePage() {
                                 {/* Mood */}
                                 <div className="flex items-center gap-2">
                                     {getMoodIcon(post.mood)}
-                                    <span className="text-sm text-muted-foreground">{post.mood}</span>
+                                    <span className="text-base text-muted-foreground">{post.mood}</span>
                                 </div>
                             </CardContent>
 
@@ -302,11 +302,11 @@ export default function TimelinePage() {
                                         onClick={() => toggleLike(post.id)}
                                     >
                                         <Heart className={`h-4 w-4 ${likedPosts.includes(post.id) ? "fill-primary text-primary" : ""}`} />
-                                        <span className="text-xs">{likedPosts.includes(post.id) ? post.likes + 1 : post.likes}</span>
+                                        <span className="text-sm">{likedPosts.includes(post.id) ? post.likes + 1 : post.likes}</span>
                                     </Button>
                                     <Button variant="ghost" size="sm" className="flex items-center gap-1">
                                         <MessageCircle className="h-4 w-4" />
-                                        <span className="text-xs">{post.comments}</span>
+                                        <span className="text-sm">{post.comments}</span>
                                     </Button>
                                     <Button variant="ghost" size="sm">
                                         <Share2 className="h-4 w-4" />
@@ -322,8 +322,8 @@ export default function TimelinePage() {
                     <Card className="bg-card border-muted">
                         <CardContent className="p-8 text-center">
                             <Search className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                            <h3 className="font-medium mb-2">検索結果が見つかりません</h3>
-                            <p className="text-sm text-muted-foreground">「{searchQuery}」に関する投稿はありませんでした</p>
+                            <h3 className="text-lg font-medium mb-2">検索結果が見つかりません</h3>
+                            <p className="text-base text-muted-foreground">「{searchQuery}」に関する投稿はありませんでした</p>
                         </CardContent>
                     </Card>
                 )}
@@ -333,13 +333,13 @@ export default function TimelinePage() {
             <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-muted">
                 <div className="flex">
                     <Link to ="/home" className="flex-1 p-4 text-center">
-                        <div className="text-muted-foreground">ホーム</div>
+                        <div className="text-base text-muted-foreground">ホーム</div>
                     </Link>
                     <Link to ="/timeline" className="flex-1 p-4 text-center">
-                        <div className="text-primary">タイムライン</div>
+                        <div className="text-base text-primary">タイムライン</div>
                     </Link>
                     <Link to ="/stats" className="flex-1 p-4 text-center">
-                        <div className="text-muted-foreground">統計</div>
+                        <div className="text-base text-muted-foreground">統計</div>
                     </Link>
                 </div>
             </nav>
