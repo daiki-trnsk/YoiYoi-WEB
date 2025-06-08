@@ -422,6 +422,16 @@ export default function HomePage() {
                 </DialogContent>
             </Dialog>
 
+            {/* Floating Action Button */}
+            <Link to="/log/new">
+                <Button
+                    size="lg"
+                    className="fixed bottom-20 right-6 h-16 w-16 rounded-full bg-primary hover:bg-accent shadow-xl border-4 border-background z-10"
+                >
+                    <Plus className="h-8 w-8" />
+                </Button>
+            </Link>
+
             {/* Bottom Navigation */}
             <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-muted">
                 <div className="flex">
