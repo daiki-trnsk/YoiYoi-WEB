@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Wine, Plus, BarChart3, Calendar, Smile, Meh, Share2, Copy, Check, Edit, LogOut } from "lucide-react"
+import { Plus, BarChart3, Calendar, Share2, Copy, Check, Edit, LogOut } from "lucide-react"
 import { Link, useNavigate } from 'react-router-dom'
 import logo from '@/images/logo.png'
 
@@ -64,6 +64,7 @@ export default function HomePage() {
                     motto: data.user_info.motto,
                 })
             } catch (e) {
+                console.log(userInfo)
                 alert("データ取得に失敗しました")
             }
         }
@@ -112,16 +113,16 @@ export default function HomePage() {
         setTimeout(() => setLinkCopied(false), 2000)
     }
 
-    const getMoodIcon = (mood: string) => {
-        switch (mood) {
-            case "楽しい":
-                return <Smile className="h-4 w-4 text-secondary" />
-            case "リラックス":
-                return <Meh className="h-4 w-4 text-blue-400" />
-            default:
-                return <Meh className="h-4 w-4 text-muted-foreground" />
-        }
-    }
+    // const getMoodIcon = (mood: string) => {
+    //     switch (mood) {
+    //         case "楽しい":
+    //             return <Smile className="h-4 w-4 text-secondary" />
+    //         case "リラックス":
+    //             return <Meh className="h-4 w-4 text-blue-400" />
+    //         default:
+    //             return <Meh className="h-4 w-4 text-muted-foreground" />
+    //     }
+    // }
 
     const handleLogout = async () => {
         try {

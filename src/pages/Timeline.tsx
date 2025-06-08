@@ -7,9 +7,9 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Wine, Heart, MessageCircle, Share2, Smile, Meh, Frown, Filter, Users, UserPlus, Search } from "lucide-react"
+import { Wine, Heart, MessageCircle, Share2, Filter, UserPlus, Search } from "lucide-react"
 import { Link } from "react-router-dom"
-import logo from '@/images/logo.png'
+// import logo from '@/images/logo.png'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 
 
@@ -51,18 +51,18 @@ export default function TimelinePage() {
         }
     }
 
-    const getMoodIcon = (mood: string) => {
-        switch (mood) {
-            case "楽しい":
-                return <Smile className="h-4 w-4 text-secondary" />
-            case "リラックス":
-                return <Meh className="h-4 w-4 text-blue-400" />
-            case "だるい":
-                return <Frown className="h-4 w-4 text-muted-foreground" />
-            default:
-                return <Meh className="h-4 w-4 text-muted-foreground" />
-        }
-    }
+    // const getMoodIcon = (mood: string) => {
+    //     switch (mood) {
+    //         case "楽しい":
+    //             return <Smile className="h-4 w-4 text-secondary" />
+    //         case "リラックス":
+    //             return <Meh className="h-4 w-4 text-blue-400" />
+    //         case "だるい":
+    //             return <Frown className="h-4 w-4 text-muted-foreground" />
+    //         default:
+    //             return <Meh className="h-4 w-4 text-muted-foreground" />
+    //     }
+    // }
 
     // 検索フィルタ
     const filteredTimeline = timeline.filter((item) => {

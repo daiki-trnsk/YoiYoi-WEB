@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Wine, BarChart3, Users, Shield, Share2 } from "lucide-react"
+import { Share2 } from "lucide-react"
 import { Link } from 'react-router-dom'
 import logo from '@/images/logo.png'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"

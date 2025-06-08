@@ -2,12 +2,12 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { useState } from "react"
 import logo from '@/images/logo.png'
 
 export default function Signup() {
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
     const [formData, setFormData] = useState({
         name: "",
         email: "",
