@@ -42,11 +42,29 @@ export default function HomePage() {
     }, []);
 
     // プロフィール編集後
-    const handleProfileSave = () => {
-      localStorage.setItem("user", JSON.stringify(profile));
-      setShowProfileDialog(false);
-      // ここでAPI連携も可能
-    }
+    const handleProfileSave = async () => {
+        try {
+          const token = localStorage.getItem("access_token");
+          const res = await fetch("https://yoiyoi-api-dev.onrender.com/auth/me", {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify(profile),
+          });
+      
+          if (!res.ok) throw new Error("プロフィール更新に失敗");
+          const updatedUser = await res.json();
+          setProfile(updatedUser);
+          localStorage.setItem("user", JSON.stringify(updatedUser));
+          setShowProfileDialog(false);
+          alert("プロフィールを保存しました！");
+        } catch (e) {
+          alert("プロフィール更新に失敗しました");
+        }
+      }
+      
 
     const generateInviteLink = () => {
         const link = `https://yoiyoi.app/invite/${Math.random().toString(36).substring(7)}`
@@ -148,7 +166,17 @@ export default function HomePage() {
                                         <DialogHeader>
                                             <DialogTitle>プロフィール編集</DialogTitle>
                                         </DialogHeader>
+
                                         <div className="space-y-4 max-h-96 overflow-y-auto">
+                                            <div>
+                                                <Label htmlFor="username">アイコン画像</Label>
+                                                <Input
+                                                    id="avatar_img"
+                                                    value={profile.avatar_img}
+                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setProfile({ ...profile, username: e.target.value })}
+                                                    className="mt-2 bg-muted border-muted"
+                                                />
+                                            </div>
                                             <div>
                                                 <Label htmlFor="username">ユーザー名</Label>
                                                 <Input
@@ -197,27 +225,10 @@ export default function HomePage() {
                                                     placeholder="例：適度に楽しく、安全第一"
                                                 />
                                             </div>
-                                            <div>
-                                                <Label htmlFor="drinking-history">飲酒歴</Label>
-                                                <Input
-                                                    id="drinking-history"
-                                                    value={profile.drinkingHistory}
-                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setProfile({ ...profile, drinkingHistory: e.target.value })}
-                                                    className="mt-2 bg-muted border-muted"
-                                                    placeholder="例：3年、10年"
-                                                />
-                                            </div>
-                                            <div>
-                                                <Label htmlFor="favorite-style">好きな飲み方</Label>
-                                                <Input
-                                                    id="favorite-style"
-                                                    value={profile.favoriteStyle}
-                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setProfile({ ...profile, favoriteStyle: e.target.value })}
-                                                    className="mt-2 bg-muted border-muted"
-                                                    placeholder="例：友達とワイワイ、一人でゆっくり"
-                                                />
-                                            </div>
-                                            <Button className="w-full bg-primary hover:bg-accent" onClick={handleProfileSave}>
+                                            <Button
+                                                className="w-full bg-primary hover:bg-accent"
+                                                onClick={handleProfileSave}
+                                                >
                                                 保存
                                             </Button>
                                         </div>
@@ -240,18 +251,6 @@ export default function HomePage() {
                                 <div>
                                     <span className="text-muted-foreground">好きなお酒:</span>
                                     <div className="font-medium">{profile.favorite_drinks}</div>
-                                </div>
-                                <div>
-                                    <span className="text-muted-foreground">飲酒歴:</span>
-                                    <div className="font-medium">{profile.drinkingHistory}</div>
-                                </div>
-                            </div>
-                            <div className="space-y-2">
-                                <div>
-                                    <span className="text-muted-foreground">好きな飲み方:</span>
-                                    <div className="font-medium">{profile.favoriteStyle}</div>
-                                </div>
-                                <div>
                                     <span className="text-muted-foreground">座右の銘:</span>
                                     <div className="font-medium text-secondary">"{profile.motto}"</div>
                                 </div>
