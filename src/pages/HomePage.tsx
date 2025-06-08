@@ -32,21 +32,39 @@ export default function HomePage() {
 
     // ここでlocalStorage参照
     useEffect(() => {
-      const storedUser = localStorage.getItem("user");
-      if (storedUser) {
-        setProfile(prev => ({
-          ...prev,
-          ...JSON.parse(storedUser)
-        }));
-      }
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+            setProfile(prev => ({
+                ...prev,
+                ...JSON.parse(storedUser)
+            }));
+        }
     }, []);
 
     // プロフィール編集後
-    const handleProfileSave = () => {
-      localStorage.setItem("user", JSON.stringify(profile));
-      setShowProfileDialog(false);
-      // ここでAPI連携も可能
-    }
+    const handleProfileSave = async () => {
+        try {
+          const token = localStorage.getItem("access_token");
+          const res = await fetch("https://yoiyoi-api-dev.onrender.com/auth/me", {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify(profile),
+          });
+      
+          if (!res.ok) throw new Error("プロフィール更新に失敗");
+          const updatedUser = await res.json();
+          setProfile(updatedUser);
+          localStorage.setItem("user", JSON.stringify(updatedUser));
+          setShowProfileDialog(false);
+          alert("プロフィールを保存しました！");
+        } catch (e) {
+          alert("プロフィール更新に失敗しました");
+        }
+      }
+      
 
     const generateInviteLink = () => {
         const link = `https://yoiyoi.app/invite/${Math.random().toString(36).substring(7)}`
@@ -96,12 +114,12 @@ export default function HomePage() {
     }
 
     return (
-        <div className="min-h-screen bg-background text-foreground">
+        <div className="min-h-screen dark bg-background text-foreground ">
             {/* Header */}
             <header className="px-4 py-6 border-b border-muted">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <img src={logo} alt="YoiYoi Logo" className="h-6 w-6" />
+                        <img src={logo} alt="YoiYoi Logo" className="h-12 w-12 md:h-16 md:w-16 lg:h-20 lg:w-20" />
                         <h1 className="text-xl font-bold">YoiYoi</h1>
                     </div>
                     <Link to="/stats">
@@ -118,19 +136,19 @@ export default function HomePage() {
                     <CardContent className="p-6">
                         <div className="flex items-start justify-between mb-4">
                             <div className="flex items-center gap-4">
-                            <Avatar className="h-16 w-16">
-                                {profile.avatar_img ? (
-                                    <img
-                                    src={profile.avatar_img}
-                                    alt="avatar"
-                                    className="h-16 w-16 rounded-full object-cover"
-                                    />
-                                ) : (
-                                    <AvatarFallback className="bg-primary text-primary-foreground text-xl">
-                                    {profile.username ? profile.username[0] : "?"}
-                                    </AvatarFallback>
-                                )}
-                            </Avatar>
+                                <Avatar className="h-16 w-16">
+                                    {profile.avatar_img ? (
+                                        <img
+                                            src={profile.avatar_img}
+                                            alt="avatar"
+                                            className="h-16 w-16 rounded-full object-cover"
+                                        />
+                                    ) : (
+                                        <AvatarFallback className="bg-primary text-primary-foreground text-xl">
+                                            {profile.username ? profile.username[0] : "?"}
+                                        </AvatarFallback>
+                                    )}
+                                </Avatar>
                                 <div>
                                     <div className="font-bold text-lg">{profile.username}</div>
                                     <div className="text-sm text-muted-foreground">@{profile.username}</div>
@@ -148,7 +166,17 @@ export default function HomePage() {
                                         <DialogHeader>
                                             <DialogTitle>プロフィール編集</DialogTitle>
                                         </DialogHeader>
+
                                         <div className="space-y-4 max-h-96 overflow-y-auto">
+                                            <div>
+                                                <Label htmlFor="username">アイコン画像</Label>
+                                                <Input
+                                                    id="avatar_img"
+                                                    value={profile.avatar_img}
+                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setProfile({ ...profile, username: e.target.value })}
+                                                    className="mt-2 bg-muted border-muted"
+                                                />
+                                            </div>
                                             <div>
                                                 <Label htmlFor="username">ユーザー名</Label>
                                                 <Input
@@ -197,27 +225,10 @@ export default function HomePage() {
                                                     placeholder="例：適度に楽しく、安全第一"
                                                 />
                                             </div>
-                                            <div>
-                                                <Label htmlFor="drinking-history">飲酒歴</Label>
-                                                <Input
-                                                    id="drinking-history"
-                                                    value={profile.drinkingHistory}
-                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setProfile({ ...profile, drinkingHistory: e.target.value })}
-                                                    className="mt-2 bg-muted border-muted"
-                                                    placeholder="例：3年、10年"
-                                                />
-                                            </div>
-                                            <div>
-                                                <Label htmlFor="favorite-style">好きな飲み方</Label>
-                                                <Input
-                                                    id="favorite-style"
-                                                    value={profile.favoriteStyle}
-                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setProfile({ ...profile, favoriteStyle: e.target.value })}
-                                                    className="mt-2 bg-muted border-muted"
-                                                    placeholder="例：友達とワイワイ、一人でゆっくり"
-                                                />
-                                            </div>
-                                            <Button className="w-full bg-primary hover:bg-accent" onClick={handleProfileSave}>
+                                            <Button
+                                                className="w-full bg-primary hover:bg-accent"
+                                                onClick={handleProfileSave}
+                                                >
                                                 保存
                                             </Button>
                                         </div>
@@ -240,18 +251,6 @@ export default function HomePage() {
                                 <div>
                                     <span className="text-muted-foreground">好きなお酒:</span>
                                     <div className="font-medium">{profile.favorite_drinks}</div>
-                                </div>
-                                <div>
-                                    <span className="text-muted-foreground">飲酒歴:</span>
-                                    <div className="font-medium">{profile.drinkingHistory}</div>
-                                </div>
-                            </div>
-                            <div className="space-y-2">
-                                <div>
-                                    <span className="text-muted-foreground">好きな飲み方:</span>
-                                    <div className="font-medium">{profile.favoriteStyle}</div>
-                                </div>
-                                <div>
                                     <span className="text-muted-foreground">座右の銘:</span>
                                     <div className="font-medium text-secondary">"{profile.motto}"</div>
                                 </div>
@@ -366,16 +365,6 @@ export default function HomePage() {
                     </div>
                 </DialogContent>
             </Dialog>
-
-            {/* Floating Action Button */}
-            <Link to="/log/new">
-                <Button
-                    size="lg"
-                    className="fixed bottom-20 right-6 h-16 w-16 rounded-full bg-primary hover:bg-accent shadow-xl border-4 border-background z-10"
-                >
-                    <Plus className="h-8 w-8" />
-                </Button>
-            </Link>
 
             {/* Bottom Navigation */}
             <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-muted">
