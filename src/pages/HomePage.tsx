@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -20,14 +20,33 @@ export default function HomePage() {
     const [showProfileDialog, setShowProfileDialog] = useState(false)
 
     const [profile, setProfile] = useState({
-        name: "あなた",
-        username: "your_username",
-        bio: "お酒と美味しい料理が大好きです🍻",
-        favoriteDrink: "クラフトビール",
-        motto: "適度に楽しく、安全第一",
-        drinkingHistory: "3年",
-        favoriteStyle: "友達とワイワイ",
+        username: "",
+        email: "",
+        avatar_img: "",
+        bio: "",
+        favorite_drinks: "",
+        motto: "",
+        drinkingHistory: "",
+        favoriteStyle: "",
     })
+
+    // ここでlocalStorage参照
+    useEffect(() => {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        setProfile(prev => ({
+          ...prev,
+          ...JSON.parse(storedUser)
+        }));
+      }
+    }, []);
+
+    // プロフィール編集後
+    const handleProfileSave = () => {
+      localStorage.setItem("user", JSON.stringify(profile));
+      setShowProfileDialog(false);
+      // ここでAPI連携も可能
+    }
 
     const generateInviteLink = () => {
         const link = `https://yoiyoi.app/invite/${Math.random().toString(36).substring(7)}`
@@ -99,11 +118,21 @@ export default function HomePage() {
                     <CardContent className="p-6">
                         <div className="flex items-start justify-between mb-4">
                             <div className="flex items-center gap-4">
-                                <Avatar className="h-16 w-16">
-                                    <AvatarFallback className="bg-primary text-primary-foreground text-xl">あ</AvatarFallback>
-                                </Avatar>
+                            <Avatar className="h-16 w-16">
+                                {profile.avatar_img ? (
+                                    <img
+                                    src={profile.avatar_img}
+                                    alt="avatar"
+                                    className="h-16 w-16 rounded-full object-cover"
+                                    />
+                                ) : (
+                                    <AvatarFallback className="bg-primary text-primary-foreground text-xl">
+                                    {profile.username ? profile.username[0] : "?"}
+                                    </AvatarFallback>
+                                )}
+                            </Avatar>
                                 <div>
-                                    <div className="font-bold text-lg">{profile.name}</div>
+                                    <div className="font-bold text-lg">{profile.username}</div>
                                     <div className="text-sm text-muted-foreground">@{profile.username}</div>
                                     <div className="text-sm mt-1">{profile.bio}</div>
                                 </div>
@@ -121,11 +150,20 @@ export default function HomePage() {
                                         </DialogHeader>
                                         <div className="space-y-4 max-h-96 overflow-y-auto">
                                             <div>
-                                                <Label htmlFor="name">名前</Label>
+                                                <Label htmlFor="username">ユーザー名</Label>
                                                 <Input
-                                                    id="name"
-                                                    value={profile.name}
-                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setProfile({ ...profile, name: e.target.value })}
+                                                    id="username"
+                                                    value={profile.username}
+                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setProfile({ ...profile, username: e.target.value })}
+                                                    className="mt-2 bg-muted border-muted"
+                                                />
+                                            </div>
+                                            <div>
+                                                <Label htmlFor="email">メールアドレス</Label>
+                                                <Input
+                                                    id="email"
+                                                    value={profile.email}
+                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setProfile({ ...profile, email: e.target.value })}
                                                     className="mt-2 bg-muted border-muted"
                                                 />
                                             </div>
@@ -143,8 +181,8 @@ export default function HomePage() {
                                                 <Label htmlFor="favorite-drink">好きなお酒</Label>
                                                 <Input
                                                     id="favorite-drink"
-                                                    value={profile.favoriteDrink}
-                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setProfile({ ...profile, favoriteDrink: e.target.value })}
+                                                    value={profile.favorite_drinks}
+                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setProfile({ ...profile, favorite_drinks: e.target.value })}
                                                     className="mt-2 bg-muted border-muted"
                                                     placeholder="例：クラフトビール、日本酒"
                                                 />
@@ -179,7 +217,7 @@ export default function HomePage() {
                                                     placeholder="例：友達とワイワイ、一人でゆっくり"
                                                 />
                                             </div>
-                                            <Button className="w-full bg-primary hover:bg-accent" onClick={() => setShowProfileDialog(false)}>
+                                            <Button className="w-full bg-primary hover:bg-accent" onClick={handleProfileSave}>
                                                 保存
                                             </Button>
                                         </div>
@@ -201,7 +239,7 @@ export default function HomePage() {
                             <div className="space-y-2">
                                 <div>
                                     <span className="text-muted-foreground">好きなお酒:</span>
-                                    <div className="font-medium">{profile.favoriteDrink}</div>
+                                    <div className="font-medium">{profile.favorite_drinks}</div>
                                 </div>
                                 <div>
                                     <span className="text-muted-foreground">飲酒歴:</span>

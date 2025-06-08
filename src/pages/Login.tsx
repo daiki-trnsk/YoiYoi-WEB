@@ -16,7 +16,7 @@ export default function Login() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-          const res = await fetch("https://api.yoursite.com/auth/login", {
+          const res = await fetch("https://yoiyoi-api-dev.onrender.com/auth/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -26,6 +26,7 @@ export default function Login() {
           });
       
           const data = await res.json();
+          console.log(data)
       
           if (data.access_token) {
             // ② access_tokenをlocalStorageに保存
