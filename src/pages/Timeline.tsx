@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Wine, Heart, MessageCircle, Share2, Smile, Meh, Frown, Filter, Users, UserPlus, Search } from "lucide-react"
+import { ArrowLeft, Heart, MessageCircle, Share2, Smile, Meh, Frown, Filter, Users, UserPlus, Search } from "lucide-react"
 import { Link } from "react-router-dom"
 import logo from '@/images/logo.png'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -147,14 +147,19 @@ export default function TimelinePage() {
     return (
         <div className="min-h-screen dark bg-background text-foreground pb-20">
             {/* Header */}
-            <header className="px-4 py-6 border-b border-muted sticky top-0 bg-background z-10">
+            <header className="px-4 py-12 border-b border-muted sticky top-0 bg-background z-10">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <Wine className="h-6 w-6 text-primary" />
+                        <Link to="/home">
+                            <Button variant="ghost" className="h-20 w-20 p-0">
+                                <ArrowLeft className="h-16 w-16"/>
+                            </Button>
+                        </Link>
+                        <img src={logo} alt="YoiYoi Logo" className="h-12 w-12 md:h-16 md:w-16 lg:h-20 lg:w-20" />
                         <h1 className="text-xl font-bold">YoiYoi</h1>
                     </div>
-                    <Button variant="ghost" size="sm">
-                        <Filter className="h-4 w-4" />
+                    <Button variant="ghost">
+                        <Filter className="h-16 w-16"/>
                     </Button>
                 </div>
             </header>

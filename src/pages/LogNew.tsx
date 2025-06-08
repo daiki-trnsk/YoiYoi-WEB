@@ -6,8 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Plus, Wine, Calendar } from "lucide-react"
+import { Plus, Wine, Calendar, LogOut, ArrowRight } from "lucide-react"
 import { Link, useNavigate } from "react-router-dom"
+import logo from "@/images/logo.png"
 
 export default function LogNew() {
     const navigate = useNavigate()
@@ -95,12 +96,12 @@ export default function LogNew() {
             <header className="px-4 py-6 border-b border-muted">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <Wine className="h-6 w-6 text-primary" />
+                        <img src={logo} alt="YoiYoi Logo" className="h-12 w-12 md:h-16 md:w-16 lg:h-20 lg:w-20" />
                         <h1 className="text-xl font-bold">YoiYoi</h1>
                     </div>
                     <Link to="/home">
                         <Button variant="ghost" size="sm">
-                            <Calendar className="h-4 w-4" />
+                            <ArrowRight className="h-4 w-4" />
                         </Button>
                     </Link>
                 </div>

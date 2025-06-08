@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, Calendar, TrendingUp } from "lucide-react"
 import { Link } from "react-router-dom"
+import logo from "@/images/logo.png"
 
 export default function StatsPage() {
     const [period, setPeriod] = useState<"week" | "month">("week")
@@ -77,9 +78,10 @@ export default function StatsPage() {
                 <div className="flex items-center gap-4">
                     <Link to="/home">
                         <Button variant="ghost" size="sm">
-                            <ArrowLeft className="h-4 w-4" />
+                            <ArrowLeft className="h-8 w-8" />
                         </Button>
                     </Link>
+                    <img src={logo} alt="YoiYoi Logo" className="h-12 w-12 md:h-16 md:w-16 lg:h-20 lg:w-20" />
                     <h1 className="text-xl font-bold">YoiYoi - 統計</h1>
                 </div>
             </header>
@@ -119,13 +121,13 @@ export default function StatsPage() {
                             </Card>
                             <Card className="bg-card border-muted">
                                 <CardContent className="p-4 text-center">
-                                    <div className="text-xl font-bold text-secondary">{stats.average_alcohol_gram?.toFixed(1)}g</div>
+                                    <div className="text-xl font-bold text-primary">{stats.average_alcohol_gram?.toFixed(1)}g</div>
                                     <div className="text-xs text-muted-foreground">平均/日</div>
                                 </CardContent>
                             </Card>
                             <Card className="bg-card border-muted">
                                 <CardContent className="p-4 text-center">
-                                    <div className="text-xl font-bold text-accent">{stats.actual_drink_days}日</div>
+                                    <div className="text-xl font-bold text-primary">{stats.actual_drink_days}日</div>
                                     <div className="text-xs text-muted-foreground">飲酒日数</div>
                                 </CardContent>
                             </Card>
@@ -199,7 +201,7 @@ export default function StatsPage() {
                         <Card className="bg-card border-muted">
                             <CardContent className="p-4">
                                 <div className="text-center space-y-2">
-                                    <div className="text-sm font-medium text-secondary">今週のアドバイス</div>
+                                    <div className="text-sm font-medium text-primary">今週のアドバイス</div>
                                     <p className="text-sm text-muted-foreground">適度な飲酒を心がけましょう。休肝日も大切です！</p>
                                 </div>
                             </CardContent>

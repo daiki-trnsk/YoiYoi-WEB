@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Wine, Plus, BarChart3, Calendar, Smile, Meh, Share2, Copy, Check, Edit, LogOut } from "lucide-react"
 import { Link, useNavigate } from 'react-router-dom'
 import logo from '@/images/logo.png'
+import timeLineImage from '@/images/log_logo.png'
 
 export default function HomePage() {
     const [inviteLink, setInviteLink] = useState("")
@@ -313,7 +314,7 @@ export default function HomePage() {
                 <Link to="/timeline">
                     <Card className="bg-card border-muted cursor-pointer hover:bg-muted/50 transition-colors">
                         <CardContent className="p-4 text-center">
-                            <img src={logo} alt="YoiYoi Logo" className="h-8 w-8 text-secondary mx-auto mb-2" />
+                            <img src = {timeLineImage} alt="YoiYoi Logo" className="h-10 w-10 text-secondary mx-auto mb-2" />
                             <div className="text-sm font-medium">タイムラインを見る</div>
                             <div className="text-xs text-muted-foreground mt-1">友達の投稿をチェック</div>
                         </CardContent>
@@ -332,7 +333,7 @@ export default function HomePage() {
                     </Card>
                     <Card className="bg-card border-muted">
                         <CardContent className="p-4 text-center">
-                            <div className="text-2xl font-bold text-secondary">
+                            <div className="text-2xl font-bold text-primary">
                                 {logsCount30}回
                             </div>
                             <div className="text-sm text-muted-foreground">今月の記録</div>
