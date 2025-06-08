@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -10,13 +10,40 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Wine, Heart, MessageCircle, Share2, Smile, Meh, Frown, Filter, Users, UserPlus, Search } from "lucide-react"
 import { Link } from "react-router-dom"
 import logo from '@/images/logo.png'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 
 
 export default function TimelinePage() {
-    const [likedPosts, setLikedPosts] = useState<number[]>([])
+    const [likedPosts, setLikedPosts] = useState<string[]>([])
     const [searchQuery, setSearchQuery] = useState("")
+    const [friendList, setFriendList] = useState<any[]>([])
+    const [timeline, setTimeline] = useState<any[]>([])
+    const [showAddDialog, setShowAddDialog] = useState(false)
+    const [addUserId, setAddUserId] = useState("")
+    const [addLoading, setAddLoading] = useState(false)
 
-    const toggleLike = (postId: number) => {
+    useEffect(() => {
+        const fetchTimeline = async () => {
+            const token = localStorage.getItem("access_token")
+            if (!token) return
+            try {
+                const res = await fetch("https://yoiyoi-api-dev.onrender.com/timeline", {
+                    headers: {
+                        "Authorization": `${token}`
+                    }
+                })
+                if (!res.ok) throw new Error("データ取得に失敗しました")
+                const data = await res.json()
+                setFriendList(Array.isArray(data.friend_list) ? data.friend_list : [])
+                setTimeline(Array.isArray(data.timeline) ? data.timeline : [])
+            } catch (e) {
+                alert("データ取得に失敗しました")
+            }
+        }
+        fetchTimeline()
+    }, [])
+
+    const toggleLike = (postId: string) => {
         if (likedPosts.includes(postId)) {
             setLikedPosts(likedPosts.filter((id) => id !== postId))
         } else {
@@ -37,86 +64,85 @@ export default function TimelinePage() {
         }
     }
 
-    const followers = [
-        { name: "田中さん", avatar: "T", isFollowing: true },
-        { name: "佐藤さん", avatar: "S", isFollowing: true },
-        { name: "山田さん", avatar: "Y", isFollowing: false },
-        { name: "鈴木さん", avatar: "鈴", isFollowing: true },
-        { name: "高橋さん", avatar: "高", isFollowing: false },
-    ]
-
-    const following = followers.filter((user) => user.isFollowing)
-
-    const allPosts = [
-        {
-            id: 1,
-            user: {
-                name: "田中さん",
-                avatar: "T",
-                favoriteDrink: "ビール",
-                motto: "毎日が乾杯日和",
-            },
-            date: "2024-01-15 20:30",
-            drinks: ["ビール ロング缶 2本", "ハイボール 2杯"],
-            mood: "楽しい",
-            alcohol: 24.5,
-            comment: "今日は仕事終わりに同僚と一杯！久しぶりに話せて楽しかった😊 #仕事終わり #ビール #同僚",
-            hashtags: ["仕事終わり", "ビール", "同僚"],
-            likes: 12,
-            comments: 3,
-            image: true,
-            safetyChecks: ["一気飲みしていない", "食事と一緒に飲んだ"],
-            type: "friend",
-        },
-        {
-            id: 2,
-            user: {
-                name: "佐藤さん",
-                avatar: "S",
-                favoriteDrink: "日本酒",
-                motto: "和の心を大切に",
-            },
-            date: "2024-01-15 19:15",
-            drinks: ["日本酒 2杯", "ビール ショート缶 1本"],
-            mood: "リラックス",
-            alcohol: 22.0,
-            comment: "家で晩酌。今日買った日本酒が美味しかった！ #日本酒 #晩酌 #家飲み",
-            hashtags: ["日本酒", "晩酌", "家飲み"],
-            likes: 8,
-            comments: 1,
-            image: false,
-            safetyChecks: ["一気飲みしていない"],
-            type: "friend",
-        },
-        {
-            id: 3,
-            user: {
-                name: "山田さん",
-                avatar: "Y",
-                favoriteDrink: "ワイン",
-                motto: "人生は一度きり",
-            },
-            group: { name: "大学の友達", color: "bg-blue-500" },
-            date: "2024-01-15 18:45",
-            drinks: ["ワイン 3杯"],
-            mood: "リラックス",
-            alcohol: 20.0,
-            comment: "久しぶりの同窓会！みんなと会えて嬉しかった🍷 #同窓会 #ワイン #大学",
-            hashtags: ["同窓会", "ワイン", "大学"],
-            likes: 15,
-            comments: 5,
-            image: true,
-            safetyChecks: ["一気飲みしていない", "食事と一緒に飲んだ"],
-            type: "group",
-        },
-    ]
-
-    const filteredPosts = allPosts.filter(
-        (post) =>
+    // 検索フィルタ
+    const filteredTimeline = timeline.filter((item) => {
+        const comment = item.drink_log?.comment || ""
+        return (
             searchQuery === "" ||
-            post.comment.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            post.hashtags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase())),
+            comment.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+    })
+
+    // フォロー中・申請中ユーザーを両方表示
+    const displayFriends = friendList.filter(
+        (user) => user.status === "accepted" || user.status === "pending"
     )
+
+    const handleAccept = async (friendId: string) => {
+        const token = localStorage.getItem("access_token")
+        if (!token) return
+        try {
+            const res = await fetch(`https://yoiyoi-api-dev.onrender.com/friends/accept/${friendId}`, {
+                method: "PATCH",
+                headers: { "Authorization": `${token}` }
+            })
+            if (!res.ok) throw new Error("承認に失敗しました")
+            // 承認後リストを再取得
+            const data = await fetch("https://yoiyoi-api-dev.onrender.com/timeline", {
+                headers: { "Authorization": `${token}` }
+            }).then(r => r.json())
+            setFriendList(data.friend_list)
+        } catch {
+            alert("承認に失敗しました")
+        }
+    }
+
+    const handleReject = async (friendId: string) => {
+        const token = localStorage.getItem("access_token")
+        if (!token) return
+        try {
+            const res = await fetch(`https://yoiyoi-api-dev.onrender.com/friends/${friendId}`, {
+                method: "DELETE",
+                headers: { "Authorization": `${token}` }
+            })
+            if (!res.ok) throw new Error("拒否に失敗しました")
+            // 拒否後リストを再取得
+            const data = await fetch("https://yoiyoi-api-dev.onrender.com/timeline", {
+                headers: { "Authorization": `${token}` }
+            }).then(r => r.json())
+            setFriendList(data.friend_list)
+        } catch {
+            alert("拒否に失敗しました")
+        }
+    }
+
+    const handleAddFriend = async () => {
+        if (!addUserId) return
+        setAddLoading(true)
+        const token = localStorage.getItem("access_token")
+        try {
+            const res = await fetch(`https://yoiyoi-api-dev.onrender.com/friends/request/${addUserId}`, {
+                method: "POST",
+                headers: { "Authorization": `${token}` }
+            })
+            if (!res.ok) throw new Error("申請に失敗しました")
+            // 送信後にリスト再取得
+            const data = await fetch("https://yoiyoi-api-dev.onrender.com/timeline", {
+                headers: { "Authorization": `${token}` }
+            }).then(r => r.json())
+            setFriendList(Array.isArray(data.friend_list) ? data.friend_list : [])
+            setTimeline(Array.isArray(data.timeline) ? data.timeline : [])
+            setShowAddDialog(false)
+            setAddUserId("")
+        } catch {
+            alert("申請に失敗しました")
+        } finally {
+            setAddLoading(false)
+        }
+    }
+
+    // フォロー中ユーザーのみ
+    const following = friendList.filter((user) => user.status === "accepted")
 
     return (
         <div className="min-h-screen dark bg-background text-foreground pb-20">
@@ -145,18 +171,80 @@ export default function TimelinePage() {
                     <CardContent>
                         <ScrollArea className="w-full">
                             <div className="flex gap-3 pb-2">
-                                {following.map((user, index) => (
-                                    <div key={index} className="flex flex-col items-center gap-2 min-w-[60px]">
-                                        <Avatar className="h-12 w-12 border-2 border-primary">
-                                            <AvatarFallback className="bg-muted">{user.avatar}</AvatarFallback>
+                                {displayFriends.map((user) => (
+                                    <div
+                                        key={user.id}
+                                        className={`flex flex-col items-center gap-2 min-w-[60px] group relative
+                                            ${user.status === "pending" ? "opacity-60 grayscale hover:opacity-100 hover:grayscale-0 transition" : ""}
+                                        `}
+                                    >
+                                        <Avatar className={`h-12 w-12 border-2 ${user.status === "pending" ? "border-yellow-400" : "border-primary"}`}>
+                                            {user.avatar_img ? (
+                                                <img src={user.avatar_img} alt={user.username} className="h-12 w-12 rounded-full object-cover" />
+                                            ) : (
+                                                <AvatarFallback className="bg-muted">{user.username?.[0] || "?"}</AvatarFallback>
+                                            )}
                                         </Avatar>
-                                        <span className="text-sm text-center">{user.name}</span>
+                                        <span className="text-sm text-center">{user.username}</span>
+                                        {user.status === "pending" && (
+                                            <div
+                                                className="absolute left-1/2 -translate-x-1/2 top-[60px] z-20 hidden group-hover:flex flex-row gap-2
+                                                           bg-card rounded-lg shadow-lg p-2"
+                                                style={{ minWidth: 80 }}
+                                            >
+                                                <Button
+                                                    size="icon"
+                                                    variant="ghost"
+                                                    className="bg-green-500 hover:bg-green-600 text-white border-none"
+                                                    style={{ boxShadow: "none" }}
+                                                    onClick={() => handleAccept(user.friend_id)}
+                                                >
+                                                    <span className="text-xl">✔</span>
+                                                </Button>
+                                                <Button
+                                                    size="icon"
+                                                    variant="ghost"
+                                                    className="bg-red-500 hover:bg-red-600 text-white border-none"
+                                                    style={{ boxShadow: "none" }}
+                                                    onClick={() => handleReject(user.friend_id)}
+                                                >
+                                                    <span className="text-xl">✖</span>
+                                                </Button>
+                                            </div>
+                                        )}
+                                        {user.status === "pending" && (
+                                            <span className="text-xs text-yellow-500">申請中</span>
+                                        )}
                                     </div>
                                 ))}
                                 <div className="flex flex-col items-center gap-2 min-w-[60px]">
-                                    <div className="h-12 w-12 border-2 border-dashed border-muted rounded-full flex items-center justify-center">
-                                        <UserPlus className="h-5 w-5 text-muted-foreground" />
-                                    </div>
+                                    <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
+                                        <DialogTrigger asChild>
+                                            <div className="h-12 w-12 border-2 border-dashed border-muted rounded-full flex items-center justify-center cursor-pointer">
+                                                <UserPlus className="h-5 w-5 text-muted-foreground" />
+                                            </div>
+                                        </DialogTrigger>
+                                        <DialogContent className="bg-card border-muted">
+                                            <DialogHeader>
+                                                <DialogTitle>ユーザーIDで友達追加</DialogTitle>
+                                            </DialogHeader>
+                                            <div className="space-y-4">
+                                                <Input
+                                                    placeholder="ユーザーIDを入力"
+                                                    value={addUserId}
+                                                    onChange={e => setAddUserId(e.target.value)}
+                                                    className="bg-muted border-muted"
+                                                />
+                                                <Button
+                                                    className="w-full"
+                                                    onClick={handleAddFriend}
+                                                    disabled={addLoading || !addUserId}
+                                                >
+                                                    {addLoading ? "送信中..." : "申請する"}
+                                                </Button>
+                                            </div>
+                                        </DialogContent>
+                                    </Dialog>
                                     <span className="text-sm text-muted-foreground">追加</span>
                                 </div>
                             </div>
@@ -164,10 +252,10 @@ export default function TimelinePage() {
                     </CardContent>
                 </Card>
 
-                {/* Search with Hashtag Support */}
+                {/* Search */}
                 <div className="relative">
                     <Input
-                        placeholder="投稿やハッシュタグを検索... (#ビール #晩酌)"
+                        placeholder="投稿を検索..."
                         className="bg-muted border-muted pl-10"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
@@ -175,64 +263,43 @@ export default function TimelinePage() {
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 </div>
 
-                {/* Popular Hashtags */}
-                <Card className="bg-card border-muted">
-                    <CardContent className="p-4">
-                        <div className="flex flex-wrap gap-2">
-                            <span className="text-sm text-muted-foreground">人気:</span>
-                            {["ビール", "晩酌", "仕事終わり", "日本酒", "ワイン", "同僚"].map((tag) => (
-                                <Button
-                                    key={tag}
-                                    variant="outline"
-                                    size="sm"
-                                    className="h-6 text-sm border-muted hover:bg-muted"
-                                    onClick={() => setSearchQuery(tag)}
-                                >
-                                    #{tag}
-                                </Button>
-                            ))}
-                        </div>
-                    </CardContent>
-                </Card>
-
                 {/* Posts */}
                 <div className="space-y-4">
-                    {filteredPosts.map((post) => (
-                        <Card key={post.id} className="bg-card border-muted">
+                    {filteredTimeline.map((item) => (
+                        <Card key={item.drink_log.id} className="bg-card border-muted">
                             {/* Post Header */}
                             <CardHeader className="pb-3">
                                 <div className="flex justify-between items-start">
                                     <div className="flex items-start gap-3">
                                         <Avatar>
-                                            <AvatarFallback className="bg-muted">{post.user.avatar}</AvatarFallback>
+                                            {item.user.avatar_img ? (
+                                                <img src={item.user.avatar_img} alt={item.user.username} className="h-10 w-10 rounded-full object-cover" />
+                                            ) : (
+                                                <AvatarFallback className="bg-muted">{item.user.username?.[0] || "?"}</AvatarFallback>
+                                            )}
                                         </Avatar>
                                         <div className="flex-1">
                                             <div className="flex items-center gap-2">
-                                                <span className="font-medium">{post.user.name}</span>
-                                                {post.type === "group" && "group" in post && (
-                                                    <div className="flex items-center gap-1">
-                                                        <Users className="h-3 w-3 text-muted-foreground" />
-                                                        <span className="text-xs text-muted-foreground">{post.group.name}</span>
-                                                    </div>
-                                                )}
+                                                <span className="font-medium">{item.user.username}</span>
                                             </div>
-                                            <div className="text-sm text-muted-foreground">{post.date}</div>
-
+                                            <div className="text-sm text-muted-foreground">
+                                                {item.drink_log.drink_date ? item.drink_log.drink_date.slice(0, 10) : ""}
+                                            </div>
                                             {/* User Profile Info */}
                                             <div className="mt-2 text-sm space-y-1">
                                                 <div className="flex items-center gap-2">
                                                     <span className="text-muted-foreground">好きなお酒:</span>
-                                                    <span className="text-secondary font-medium">{post.user.favoriteDrink}</span>
+                                                    <span className="text-secondary font-medium">{item.user.favorite_drinks}</span>
                                                 </div>
                                                 <div className="flex items-center gap-2">
                                                     <span className="text-muted-foreground">座右の銘:</span>
-                                                    <span className="italic">"{post.user.motto}"</span>
+                                                    <span className="italic">"{item.user.motto}"</span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <Badge variant="secondary" className="text-sm">
-                                        {post.alcohol}g
+                                        {item.drink_log.drinks.reduce((sum: number, d: any) => sum + d.amount_ml, 0)}ml
                                     </Badge>
                                 </div>
                             </CardHeader>
@@ -241,54 +308,16 @@ export default function TimelinePage() {
                             <CardContent className="space-y-3">
                                 {/* Drinks */}
                                 <div className="space-y-1">
-                                    {post.drinks.map((drink, index) => (
+                                    {item.drink_log.drinks.map((drink: any, index: number) => (
                                         <div key={index} className="text-base">
-                                            {drink}
+                                            {drink.name} {drink.amount_ml}ml（{drink.abv}%）
                                         </div>
                                     ))}
                                 </div>
 
-                                {/* Safety Checks */}
-                                {post.safetyChecks.length > 0 && (
-                                    <div className="flex flex-wrap gap-2">
-                                        {post.safetyChecks.map((check, index) => (
-                                            <Badge key={index} variant="outline" className="text-sm bg-muted/50 border-muted">
-                                                ✓ {check}
-                                            </Badge>
-                                        ))}
-                                    </div>
-                                )}
-
-                                {/* Comment with Hashtags */}
+                                {/* Comment */}
                                 <div className="text-sm">
-                                    {post.comment.split(" ").map((word, index) => (
-                                        <span key={index}>
-                                            {word.startsWith("#") ? (
-                                                <span className="text-primary font-medium cursor-pointer hover:underline">{word}</span>
-                                            ) : (
-                                                word
-                                            )}
-                                            {index < post.comment.split(" ").length - 1 ? " " : ""}
-                                        </span>
-                                    ))}
-                                </div>
-
-                                {/* Image */}
-                                {post.image && (
-                                    <div className="mt-2 rounded-xl overflow-hidden bg-muted/50">
-                                        <div className="aspect-[4/3] bg-muted/50 flex items-center justify-center">
-                                            <div className="text-center space-y-2">
-                                                <img src={logo} alt="YoiYoi Logo" className="h-8 w-8 opacity-50" />
-                                                <p className="text-sm text-muted-foreground">投稿画像</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Mood */}
-                                <div className="flex items-center gap-2">
-                                    {getMoodIcon(post.mood)}
-                                    <span className="text-base text-muted-foreground">{post.mood}</span>
+                                    {item.drink_log.comment}
                                 </div>
                             </CardContent>
 
@@ -299,14 +328,14 @@ export default function TimelinePage() {
                                         variant="ghost"
                                         size="sm"
                                         className="flex items-center gap-1"
-                                        onClick={() => toggleLike(post.id)}
+                                        onClick={() => toggleLike(item.drink_log.id)}
                                     >
-                                        <Heart className={`h-4 w-4 ${likedPosts.includes(post.id) ? "fill-primary text-primary" : ""}`} />
-                                        <span className="text-sm">{likedPosts.includes(post.id) ? post.likes + 1 : post.likes}</span>
+                                        <Heart className={`h-4 w-4 ${likedPosts.includes(item.drink_log.id) ? "fill-primary text-primary" : ""}`} />
+                                        <span className="text-sm">{likedPosts.includes(item.drink_log.id) ? 1 : 0}</span>
                                     </Button>
                                     <Button variant="ghost" size="sm" className="flex items-center gap-1">
                                         <MessageCircle className="h-4 w-4" />
-                                        <span className="text-sm">{post.comments}</span>
+                                        <span className="text-sm">0</span>
                                     </Button>
                                     <Button variant="ghost" size="sm">
                                         <Share2 className="h-4 w-4" />
@@ -318,7 +347,7 @@ export default function TimelinePage() {
                 </div>
 
                 {/* No Results */}
-                {searchQuery && filteredPosts.length === 0 && (
+                {searchQuery && filteredTimeline.length === 0 && (
                     <Card className="bg-card border-muted">
                         <CardContent className="p-8 text-center">
                             <Search className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
@@ -332,13 +361,13 @@ export default function TimelinePage() {
             {/* Bottom Navigation */}
             <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-muted">
                 <div className="flex">
-                    <Link to ="/home" className="flex-1 p-4 text-center">
+                    <Link to="/home" className="flex-1 p-4 text-center">
                         <div className="text-base text-muted-foreground">ホーム</div>
                     </Link>
-                    <Link to ="/timeline" className="flex-1 p-4 text-center">
+                    <Link to="/timeline" className="flex-1 p-4 text-center">
                         <div className="text-base text-primary">タイムライン</div>
                     </Link>
-                    <Link to ="/stats" className="flex-1 p-4 text-center">
+                    <Link to="/stats" className="flex-1 p-4 text-center">
                         <div className="text-base text-muted-foreground">統計</div>
                     </Link>
                 </div>
