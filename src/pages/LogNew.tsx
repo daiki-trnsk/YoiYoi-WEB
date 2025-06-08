@@ -6,29 +6,50 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Switch } from "@/components/ui/switch"
-import { Badge } from "@/components/ui/badge"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ArrowLeft, Plus, X, Camera, Smile, Meh, Frown, Hash, Wine, BarChart3, Calendar } from "lucide-react"
+import { Plus, Wine, Calendar } from "lucide-react"
 import { Link, useNavigate } from "react-router-dom"
 
 export default function LogNew() {
     const navigate = useNavigate()
     const [formData, setFormData] = useState({
         date: new Date().toISOString().split('T')[0],
-        drinks: [""],
-        mood: "楽しい",
+        drinks: [
+            { name: "", amount_ml: "", abv: "" }
+        ],
         comment: ""
     })
+    const [loading, setLoading] = useState(false)
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        setLoading(true)
         try {
-            // TODO: 実際の記録保存処理を実装
-            console.log("記録を保存します", formData)
+            const token = localStorage.getItem("access_token")
+            // 日付を "YYYY-MM-DDT00:00:00Z" 形式に変換
+            const isoDate = formData.date ? `${formData.date}T00:00:00Z` : ""
+            const payload = {
+                comment: formData.comment,
+                drink_date: isoDate,
+                drinks: formData.drinks.map(d => ({
+                    name: d.name,
+                    amount_ml: Number(d.amount_ml),
+                    abv: Number(d.abv)
+                }))
+            }
+            const res = await fetch("https://yoiyoi-api-dev.onrender.com/logs", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `${token}`
+                },
+                body: JSON.stringify(payload)
+            })
+            if (!res.ok) throw new Error("記録の保存に失敗しました")
             navigate("/home")
         } catch (error) {
-            console.error("記録の保存に失敗しました:", error)
+            alert("記録の保存に失敗しました")
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -36,7 +57,15 @@ export default function LogNew() {
         navigate(-1)
     }
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const handleCancel = () => {
+        navigate(-1)
+    }
+
+    const handleCancel = () => {
+        navigate(-1)
+    }
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target
         setFormData(prev => ({
             ...prev,
@@ -44,9 +73,9 @@ export default function LogNew() {
         }))
     }
 
-    const handleDrinkChange = (index: number, value: string) => {
+    const handleDrinkChange = (index: number, field: string, value: string) => {
         const newDrinks = [...formData.drinks]
-        newDrinks[index] = value
+        newDrinks[index] = { ...newDrinks[index], [field]: value }
         setFormData(prev => ({
             ...prev,
             drinks: newDrinks
@@ -56,7 +85,7 @@ export default function LogNew() {
     const addDrinkField = () => {
         setFormData(prev => ({
             ...prev,
-            drinks: [...prev.drinks, ""]
+            drinks: [...prev.drinks, { name: "", amount_ml: "", abv: "" }]
         }))
     }
 
@@ -107,12 +136,31 @@ export default function LogNew() {
                             <div className="space-y-2">
                                 <Label>飲んだお酒</Label>
                                 {formData.drinks.map((drink, index) => (
-                                    <div key={index} className="flex gap-2">
+                                    <div key={index} className="flex gap-2 flex-wrap">
                                         <Input
-                                            value={drink}
-                                            onChange={(e) => handleDrinkChange(index, e.target.value)}
-                                            placeholder="例：ビール 500ml"
+                                            value={drink.name}
+                                            onChange={e => handleDrinkChange(index, "name", e.target.value)}
+                                            placeholder="例：ビール"
                                             required
+                                            className="w-32"
+                                        />
+                                        <Input
+                                            type="number"
+                                            value={drink.amount_ml}
+                                            onChange={e => handleDrinkChange(index, "amount_ml", e.target.value)}
+                                            placeholder="ml"
+                                            required
+                                            min={0}
+                                            className="w-24"
+                                        />
+                                        <Input
+                                            type="number"
+                                            value={drink.abv}
+                                            onChange={e => handleDrinkChange(index, "abv", e.target.value)}
+                                            placeholder="度数(%)"
+                                            required
+                                            min={0}
+                                            className="w-24"
                                         />
                                         {index > 0 && (
                                             <Button
@@ -139,23 +187,6 @@ export default function LogNew() {
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="mood">気分</Label>
-                                <select
-                                    id="mood"
-                                    name="mood"
-                                    value={formData.mood}
-                                    onChange={handleChange}
-                                    className="w-full p-2 rounded-md border border-muted bg-muted"
-                                    required
-                                >
-                                    <option value="楽しい">楽しい</option>
-                                    <option value="リラックス">リラックス</option>
-                                    <option value="普通">普通</option>
-                                    <option value="疲れた">疲れた</option>
-                                </select>
-                            </div>
-
-                            <div className="space-y-2">
                                 <Label htmlFor="comment">コメント</Label>
                                 <Textarea
                                     id="comment"
@@ -167,8 +198,8 @@ export default function LogNew() {
                                 />
                             </div>
 
-                            <Button type="submit" className="w-full">
-                                記録を保存
+                            <Button type="submit" className="w-full" disabled={loading}>
+                                {loading ? "保存中..." : "記録を保存"}
                             </Button>
                             <Button
                                 type="button"
