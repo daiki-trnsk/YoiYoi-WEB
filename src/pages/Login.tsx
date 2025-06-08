@@ -16,32 +16,32 @@ export default function Login() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-          const res = await fetch("https://yoiyoi-api-dev.onrender.com/auth/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              email: formData.email,
-              password: formData.password,
-            }),
-          });
-      
-          const data = await res.json();
-          console.log(data)
-      
-          if (data.access_token) {
-            // ② access_tokenをlocalStorageに保存
-            localStorage.setItem("access_token", data.access_token);
-            // ③ ユーザー情報も保存したければここで
-            localStorage.setItem("user", JSON.stringify(data.user));
-            // ④ ログイン後にページ遷移
-            navigate("/home");
-          } else {
-            alert("ログインに失敗しました");
-          }
+            const res = await fetch("https://yoiyoi-api-dev.onrender.com/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    email: formData.email,
+                    password: formData.password,
+                }),
+            });
+
+            const data = await res.json();
+            console.log(data)
+
+            if (data.access_token) {
+                // ② access_tokenをlocalStorageに保存
+                localStorage.setItem("access_token", data.access_token);
+                // ③ ユーザー情報も保存したければここで
+                localStorage.setItem("user", JSON.stringify(data.user));
+                // ④ ログイン後にページ遷移
+                navigate("/home");
+            } else {
+                alert("ログインに失敗しました");
+            }
         } catch (error) {
-          alert("エラーが発生しました");
+            alert("エラーが発生しました");
         }
-      };      
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target
@@ -64,7 +64,7 @@ export default function Login() {
     }
 
     return (
-        <div className="min-h-screen bg-background text-foreground">
+        <div className="min-h-screen dark bg-background text-foreground">
             <div className="container max-w-md mx-auto px-4 py-8">
                 <div className="flex flex-col items-center space-y-8">
                     <div className="flex items-center gap-2">

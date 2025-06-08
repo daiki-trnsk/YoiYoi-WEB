@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 
 export default function Privacy() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen dark bg-background text-foreground">
       <div className="container max-w-2xl mx-auto px-4 py-8">
         <Card>
           <CardContent className="p-6 space-y-6">

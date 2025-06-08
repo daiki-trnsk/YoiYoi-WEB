@@ -119,7 +119,7 @@ export default function TimelinePage() {
     )
 
     return (
-        <div className="min-h-screen bg-background text-foreground pb-20">
+        <div className="min-h-screen dark bg-background text-foreground pb-20">
             {/* Header */}
             <header className="px-4 py-6 border-b border-muted sticky top-0 bg-background z-10">
                 <div className="flex items-center justify-between">
