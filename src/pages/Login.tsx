@@ -46,7 +46,7 @@ export default function Login() {
     }
 
     return (
-        <div className="min-h-screen bg-background text-foreground">
+        <div className="min-h-screen dark bg-background text-foreground">
             <div className="container max-w-md mx-auto px-4 py-8">
                 <div className="flex flex-col items-center space-y-8">
                     <div className="flex items-center gap-2">

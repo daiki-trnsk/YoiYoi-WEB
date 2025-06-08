@@ -69,7 +69,7 @@ export default function Home() {
 
 
         {/* Features */}
-        <div className="max-w-4xl mx-auto px-4">
+        <div className="max-w-5xl mx-auto px-4">
           <div className="grid gap-6 md:grid-cols-3 pt-8 pb-8 text-center">
             {[
               {

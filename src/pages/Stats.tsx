@@ -31,7 +31,7 @@ export default function StatsPage() {
     const maxAmount = Math.max(...weeklyData.map((d) => d.amount))
 
     return (
-        <div className="min-h-screen bg-background text-foreground pb-20">
+        <div className="min-h-screen dark bg-background text-foreground pb-20">
             {/* Header */}
             <header className="px-4 py-6 border-b border-muted">
                 <div className="flex items-center gap-4">
