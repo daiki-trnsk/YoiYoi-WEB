@@ -55,14 +55,10 @@ export default function Home() {
 
           {/* テキストは中央寄せにしたいので max-w をここで指定 */}
           <div className="relative z-10 max-w-4xl mx-auto px-4 py-8 text-white">
-            <h2 className="text-3xl md:text-4xl font-bold leading-relaxed text-left font-shippori">
-              宵酒<br />
-              ほろ酔い<br />
-              好い時間
+            <h2 className="text-3xl md:text-4xl pt-16 font-bold leading-relaxed text-center font-shippori">
+              宵酒の良い夜を<br/>
+              “酔いの記録”で更に善く
             </h2>
-            <p className="text-lg whitespace-nowrap pt-8 text-left font-shippori">
-              「善い飲み方は、酔いの記録から。」
-            </p>
           </div>
         </div>
 
