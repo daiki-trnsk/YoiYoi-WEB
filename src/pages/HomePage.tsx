@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -20,14 +20,33 @@ export default function HomePage() {
     const [showProfileDialog, setShowProfileDialog] = useState(false)
 
     const [profile, setProfile] = useState({
-        name: "あなた",
-        username: "your_username",
-        bio: "お酒と美味しい料理が大好きです🍻",
-        favoriteDrink: "クラフトビール",
-        motto: "適度に楽しく、安全第一",
-        drinkingHistory: "3年",
-        favoriteStyle: "友達とワイワイ",
+        username: "",
+        email: "",
+        avatar_img: "",
+        bio: "",
+        favorite_drinks: "",
+        motto: "",
+        drinkingHistory: "",
+        favoriteStyle: "",
     })
+
+    // ここでlocalStorage参照
+    useEffect(() => {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        setProfile(prev => ({
+          ...prev,
+          ...JSON.parse(storedUser)
+        }));
+      }
+    }, []);
+
+    // プロフィール編集後
+    const handleProfileSave = () => {
+      localStorage.setItem("user", JSON.stringify(profile));
+      setShowProfileDialog(false);
+      // ここでAPI連携も可能
+    }
 
     const generateInviteLink = () => {
         const link = `https://yoiyoi.app/invite/${Math.random().toString(36).substring(7)}`
@@ -94,6 +113,7 @@ export default function HomePage() {
                     </div>
                 </header>
 
+<<<<<<< HEAD
                 <main className="px-4 py-6 space-y-6">
                     {/* Enhanced User Profile Section */}
                     <Card className="bg-card border-muted">
@@ -273,6 +293,116 @@ export default function HomePage() {
                                                 />
                                             </div>
                                             <div className="w-12 text-sm text-right">{value}g</div>
+=======
+            <main className="px-4 py-6 space-y-6">
+                {/* Enhanced User Profile Section */}
+                <Card className="bg-card border-muted">
+                    <CardContent className="p-6">
+                        <div className="flex items-start justify-between mb-4">
+                            <div className="flex items-center gap-4">
+                            <Avatar className="h-16 w-16">
+                                {profile.avatar_img ? (
+                                    <img
+                                    src={profile.avatar_img}
+                                    alt="avatar"
+                                    className="h-16 w-16 rounded-full object-cover"
+                                    />
+                                ) : (
+                                    <AvatarFallback className="bg-primary text-primary-foreground text-xl">
+                                    {profile.username ? profile.username[0] : "?"}
+                                    </AvatarFallback>
+                                )}
+                            </Avatar>
+                                <div>
+                                    <div className="font-bold text-lg">{profile.username}</div>
+                                    <div className="text-sm text-muted-foreground">@{profile.username}</div>
+                                    <div className="text-sm mt-1">{profile.bio}</div>
+                                </div>
+                            </div>
+                            <div className="flex gap-2">
+                                <Dialog open={showProfileDialog} onOpenChange={setShowProfileDialog}>
+                                    <DialogTrigger asChild>
+                                        <Button variant="outline" size="sm" className="border-muted hover:bg-muted">
+                                            <Edit className="h-4 w-4" />
+                                        </Button>
+                                    </DialogTrigger>
+                                    <DialogContent className="bg-card border-muted max-w-md">
+                                        <DialogHeader>
+                                            <DialogTitle>プロフィール編集</DialogTitle>
+                                        </DialogHeader>
+                                        <div className="space-y-4 max-h-96 overflow-y-auto">
+                                            <div>
+                                                <Label htmlFor="username">ユーザー名</Label>
+                                                <Input
+                                                    id="username"
+                                                    value={profile.username}
+                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setProfile({ ...profile, username: e.target.value })}
+                                                    className="mt-2 bg-muted border-muted"
+                                                />
+                                            </div>
+                                            <div>
+                                                <Label htmlFor="email">メールアドレス</Label>
+                                                <Input
+                                                    id="email"
+                                                    value={profile.email}
+                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setProfile({ ...profile, email: e.target.value })}
+                                                    className="mt-2 bg-muted border-muted"
+                                                />
+                                            </div>
+                                            <div>
+                                                <Label htmlFor="bio">自己紹介</Label>
+                                                <Textarea
+                                                    id="bio"
+                                                    value={profile.bio}
+                                                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setProfile({ ...profile, bio: e.target.value })}
+                                                    className="mt-2 bg-muted border-muted resize-none"
+                                                    rows={2}
+                                                />
+                                            </div>
+                                            <div>
+                                                <Label htmlFor="favorite-drink">好きなお酒</Label>
+                                                <Input
+                                                    id="favorite-drink"
+                                                    value={profile.favorite_drinks}
+                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setProfile({ ...profile, favorite_drinks: e.target.value })}
+                                                    className="mt-2 bg-muted border-muted"
+                                                    placeholder="例：クラフトビール、日本酒"
+                                                />
+                                            </div>
+                                            <div>
+                                                <Label htmlFor="motto">座右の銘</Label>
+                                                <Input
+                                                    id="motto"
+                                                    value={profile.motto}
+                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setProfile({ ...profile, motto: e.target.value })}
+                                                    className="mt-2 bg-muted border-muted"
+                                                    placeholder="例：適度に楽しく、安全第一"
+                                                />
+                                            </div>
+                                            <div>
+                                                <Label htmlFor="drinking-history">飲酒歴</Label>
+                                                <Input
+                                                    id="drinking-history"
+                                                    value={profile.drinkingHistory}
+                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setProfile({ ...profile, drinkingHistory: e.target.value })}
+                                                    className="mt-2 bg-muted border-muted"
+                                                    placeholder="例：3年、10年"
+                                                />
+                                            </div>
+                                            <div>
+                                                <Label htmlFor="favorite-style">好きな飲み方</Label>
+                                                <Input
+                                                    id="favorite-style"
+                                                    value={profile.favoriteStyle}
+                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setProfile({ ...profile, favoriteStyle: e.target.value })}
+                                                    className="mt-2 bg-muted border-muted"
+                                                    placeholder="例：友達とワイワイ、一人でゆっくり"
+                                                />
+                                            </div>
+                                            <Button className="w-full bg-primary hover:bg-accent" onClick={handleProfileSave}>
+                                                保存
+                                            </Button>
+>>>>>>> e98fcd2c2db175dec868c351f1dd58ca39c2c446
                                         </div>
                                     )
                                 })}
@@ -330,6 +460,7 @@ export default function HomePage() {
                     </DialogContent>
                 </Dialog>
 
+<<<<<<< HEAD
                 {/* Floating Action Button */}
                 <Link to="/log/new">
                     <Button
@@ -338,6 +469,43 @@ export default function HomePage() {
                     >
                         <Plus className="h-8 w-8" />
                     </Button>
+=======
+                        {/* Profile Details */}
+                        <div className="grid grid-cols-2 gap-4 text-sm">
+                            <div className="space-y-2">
+                                <div>
+                                    <span className="text-muted-foreground">好きなお酒:</span>
+                                    <div className="font-medium">{profile.favorite_drinks}</div>
+                                </div>
+                                <div>
+                                    <span className="text-muted-foreground">飲酒歴:</span>
+                                    <div className="font-medium">{profile.drinkingHistory}</div>
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <div>
+                                    <span className="text-muted-foreground">好きな飲み方:</span>
+                                    <div className="font-medium">{profile.favoriteStyle}</div>
+                                </div>
+                                <div>
+                                    <span className="text-muted-foreground">座右の銘:</span>
+                                    <div className="font-medium text-secondary">"{profile.motto}"</div>
+                                </div>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                {/* Quick Action - Timeline Link */}
+                <Link to="/timeline">
+                    <Card className="bg-card border-muted cursor-pointer hover:bg-muted/50 transition-colors">
+                        <CardContent className="p-4 text-center">
+                            <img src={logo} alt="YoiYoi Logo" className="h-8 w-8 text-secondary mx-auto mb-2" />
+                            <div className="text-sm font-medium">タイムラインを見る</div>
+                            <div className="text-xs text-muted-foreground mt-1">友達の投稿をチェック</div>
+                        </CardContent>
+                    </Card>
+>>>>>>> e98fcd2c2db175dec868c351f1dd58ca39c2c446
                 </Link>
 
                 {/* Bottom Navigation */}

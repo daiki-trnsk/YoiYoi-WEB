@@ -14,16 +14,34 @@ export default function Login() {
     })
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
+        e.preventDefault();
         try {
-            // TODO: 実際のログイン処理を実装
-            console.log("ログインを開始します", formData)
-            // 仮のログイン成功処理
-            navigate("/home")
+            const res = await fetch("https://yoiyoi-api-dev.onrender.com/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    email: formData.email,
+                    password: formData.password,
+                }),
+            });
+
+            const data = await res.json();
+            console.log(data)
+
+            if (data.access_token) {
+                // ② access_tokenをlocalStorageに保存
+                localStorage.setItem("access_token", data.access_token);
+                // ③ ユーザー情報も保存したければここで
+                localStorage.setItem("user", JSON.stringify(data.user));
+                // ④ ログイン後にページ遷移
+                navigate("/home");
+            } else {
+                alert("ログインに失敗しました");
+            }
         } catch (error) {
-            console.error("ログインに失敗しました:", error)
+            alert("エラーが発生しました");
         }
-    }
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target
