@@ -9,8 +9,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Wine, Plus, BarChart3, Calendar, Smile, Meh, Share2, Copy, Check, Edit } from "lucide-react"
-import { Link } from 'react-router-dom'
+import { Wine, Plus, BarChart3, Calendar, Smile, Meh, Share2, Copy, Check, Edit, LogOut } from "lucide-react"
+import { Link, useNavigate } from 'react-router-dom'
 import logo from '@/images/logo.png'
 
 export default function HomePage() {
@@ -30,6 +30,8 @@ export default function HomePage() {
         favoriteStyle: "",
     })
 
+    const navigate = useNavigate()
+
     // ここでlocalStorage参照
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
@@ -45,11 +47,13 @@ export default function HomePage() {
     const handleProfileSave = async () => {
         try {
           const token = localStorage.getItem("access_token");
+          console.log("patch送信前トークン:", token)
+          console.log("patch送信前ボディ:", profile)
           const res = await fetch("https://yoiyoi-api-dev.onrender.com/auth/me", {
             method: "PATCH",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`
+              "Authorization": `${token}`
             },
             body: JSON.stringify(profile),
           });
@@ -113,6 +117,30 @@ export default function HomePage() {
         }
     }
 
+    const handleLogout = async () => {
+        try {
+            const token = localStorage.getItem("access_token");
+            if (token) {
+                await fetch("https://yoiyoi-api-dev.onrender.com/auth/logout", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `${token}`
+                    }
+                });
+            }
+        } catch (error) {
+            console.error("ログアウト処理でエラーが発生しました:", error);
+        } finally {
+            // ローカルストレージのクリア
+            localStorage.removeItem("access_token");
+            localStorage.removeItem("user");
+            // セッションストレージのクリア
+            sessionStorage.clear();
+            // ログインページへリダイレクト
+            navigate("/login");
+        }
+    }
+
     return (
         <div className="min-h-screen dark bg-background text-foreground ">
             {/* Header */}
@@ -122,11 +150,16 @@ export default function HomePage() {
                         <img src={logo} alt="YoiYoi Logo" className="h-12 w-12 md:h-16 md:w-16 lg:h-20 lg:w-20" />
                         <h1 className="text-xl font-bold">YoiYoi</h1>
                     </div>
-                    <Link to="/stats">
-                        <Button variant="ghost" size="sm">
-                            <BarChart3 className="h-4 w-4" />
+                    <div className="flex gap-2">
+                        <Link to="/stats">
+                            <Button variant="ghost" size="sm">
+                                <BarChart3 className="h-4 w-4" />
+                            </Button>
+                        </Link>
+                        <Button variant="ghost" size="sm" onClick={handleLogout}>
+                            <LogOut className="h-4 w-4" />
                         </Button>
-                    </Link>
+                    </div>
                 </div>
             </header>
 
@@ -168,15 +201,6 @@ export default function HomePage() {
                                         </DialogHeader>
 
                                         <div className="space-y-4 max-h-96 overflow-y-auto">
-                                            <div>
-                                                <Label htmlFor="username">アイコン画像</Label>
-                                                <Input
-                                                    id="avatar_img"
-                                                    value={profile.avatar_img}
-                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setProfile({ ...profile, username: e.target.value })}
-                                                    className="mt-2 bg-muted border-muted"
-                                                />
-                                            </div>
                                             <div>
                                                 <Label htmlFor="username">ユーザー名</Label>
                                                 <Input
