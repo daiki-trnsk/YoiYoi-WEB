@@ -19,6 +19,13 @@ export default function HomePage() {
     const [showInviteDialog, setShowInviteDialog] = useState(false)
     const [showProfileDialog, setShowProfileDialog] = useState(false)
 
+    // APIから取得したデータ
+    const [userInfo, setUserInfo] = useState<any>(null)
+    const [weeklyStats, setWeeklyStats] = useState<any>(null)
+    const [logsCount30, setLogsCount30] = useState<number>(0)
+    const [recentLogs, setRecentLogs] = useState<any[]>([])
+
+    // プロフィール編集用
     const [profile, setProfile] = useState({
         username: "",
         email: "",
@@ -26,49 +33,72 @@ export default function HomePage() {
         bio: "",
         favorite_drinks: "",
         motto: "",
-        drinkingHistory: "",
-        favoriteStyle: "",
     })
 
     const navigate = useNavigate()
 
     // ここでlocalStorage参照
     useEffect(() => {
-        const storedUser = localStorage.getItem("user");
-        if (storedUser) {
-            setProfile(prev => ({
-                ...prev,
-                ...JSON.parse(storedUser)
-            }));
+        const fetchData = async () => {
+            const token = localStorage.getItem("access_token")
+            if (!token) return
+            try {
+                const res = await fetch("https://yoiyoi-api-dev.onrender.com/home", {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `${token}`
+                    }
+                })
+                if (!res.ok) throw new Error("データ取得に失敗しました")
+                const data = await res.json()
+                setUserInfo(data.user_info)
+                setWeeklyStats(data.weekly_stats)
+                setLogsCount30(data.logs_count_30)
+                setRecentLogs(data.recent_logs)
+                setProfile({
+                    username: data.user_info.username,
+                    email: data.user_info.email,
+                    avatar_img: data.user_info.avatar_img,
+                    bio: data.user_info.bio,
+                    favorite_drinks: data.user_info.favorite_drinks,
+                    motto: data.user_info.motto,
+                })
+            } catch (e) {
+                alert("データ取得に失敗しました")
+            }
         }
-    }, []);
+        fetchData()
+    }, [])
 
-    // プロフィール編集後
     const handleProfileSave = async () => {
         try {
-          const token = localStorage.getItem("access_token");
-          console.log("patch送信前トークン:", token)
-          console.log("patch送信前ボディ:", profile)
-          const res = await fetch("https://yoiyoi-api-dev.onrender.com/auth/me", {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `${token}`
-            },
-            body: JSON.stringify(profile),
-          });
-      
-          if (!res.ok) throw new Error("プロフィール更新に失敗");
-          const updatedUser = await res.json();
-          setProfile(updatedUser);
-          localStorage.setItem("user", JSON.stringify(updatedUser));
-          setShowProfileDialog(false);
-          alert("プロフィールを保存しました！");
+            const token = localStorage.getItem("access_token");
+            const res = await fetch("https://yoiyoi-api-dev.onrender.com/auth/me", {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `${token}`
+                },
+                body: JSON.stringify(profile),
+            });
+
+            if (!res.ok) throw new Error("プロフィール更新に失敗");
+            const updatedUser = await res.json();
+            setProfile({
+                username: updatedUser.username,
+                email: updatedUser.email,
+                avatar_img: updatedUser.avatar_img,
+                bio: updatedUser.bio,
+                favorite_drinks: updatedUser.favorite_drinks,
+                motto: updatedUser.motto,
+            });
+            setUserInfo(updatedUser);
+            setShowProfileDialog(false);
+            alert("プロフィールを保存しました！");
         } catch (e) {
-          alert("プロフィール更新に失敗しました");
+            alert("プロフィール更新に失敗しました");
         }
-      }
-      
+    }
 
     const generateInviteLink = () => {
         const link = `https://yoiyoi.app/invite/${Math.random().toString(36).substring(7)}`
@@ -81,30 +111,6 @@ export default function HomePage() {
         setLinkCopied(true)
         setTimeout(() => setLinkCopied(false), 2000)
     }
-
-    const recentLogs = [
-        {
-            id: 1,
-            date: "2024-01-15",
-            drinks: ["ビール 500ml", "ハイボール 300ml"],
-            mood: "楽しい",
-            alcohol: 24.5,
-        },
-        {
-            id: 2,
-            date: "2024-01-14",
-            drinks: ["日本酒 180ml"],
-            mood: "リラックス",
-            alcohol: 18.0,
-        },
-        {
-            id: 3,
-            date: "2024-01-12",
-            drinks: ["ワイン 250ml"],
-            mood: "楽しい",
-            alcohol: 20.0,
-        },
-    ]
 
     const getMoodIcon = (mood: string) => {
         switch (mood) {
@@ -139,6 +145,15 @@ export default function HomePage() {
             // ログインページへリダイレクト
             navigate("/login");
         }
+    // 曜日を日本語に変換
+    const weekdayMap: Record<string, string> = {
+        "Mon": "月",
+        "Tue": "火",
+        "Wed": "水",
+        "Thu": "木",
+        "Fri": "金",
+        "Sat": "土",
+        "Sun": "日"
     }
 
     return (
@@ -202,6 +217,15 @@ export default function HomePage() {
 
                                         <div className="space-y-4 max-h-96 overflow-y-auto">
                                             <div>
+                                                <Label htmlFor="avatar_img">アイコン画像</Label>
+                                                <Input
+                                                    id="avatar_img"
+                                                    value={profile.avatar_img}
+                                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setProfile({ ...profile, avatar_img: e.target.value })}
+                                                    className="mt-2 bg-muted border-muted"
+                                                />
+                                            </div>
+                                            <div>
                                                 <Label htmlFor="username">ユーザー名</Label>
                                                 <Input
                                                     id="username"
@@ -252,7 +276,7 @@ export default function HomePage() {
                                             <Button
                                                 className="w-full bg-primary hover:bg-accent"
                                                 onClick={handleProfileSave}
-                                                >
+                                            >
                                                 保存
                                             </Button>
                                         </div>
@@ -298,13 +322,17 @@ export default function HomePage() {
                 <div className="grid grid-cols-2 gap-4">
                     <Card className="bg-card border-muted">
                         <CardContent className="p-4 text-center">
-                            <div className="text-2xl font-bold text-primary">62.5g</div>
+                            <div className="text-2xl font-bold text-primary">
+                                {weeklyStats ? `${weeklyStats.total_alcohol_ml}ml` : "--"}
+                            </div>
                             <div className="text-sm text-muted-foreground">今週のアルコール</div>
                         </CardContent>
                     </Card>
                     <Card className="bg-card border-muted">
                         <CardContent className="p-4 text-center">
-                            <div className="text-2xl font-bold text-secondary">5回</div>
+                            <div className="text-2xl font-bold text-secondary">
+                                {logsCount30}回
+                            </div>
                             <div className="text-sm text-muted-foreground">今月の記録</div>
                         </CardContent>
                     </Card>
@@ -320,22 +348,21 @@ export default function HomePage() {
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-3">
-                            {["月", "火", "水", "木", "金", "土", "日"].map((day, index) => {
-                                const values = [0, 15, 0, 20, 25, 0, 2.5]
-                                const value = values[index]
-                                return (
-                                    <div key={day} className="flex items-center gap-3">
-                                        <div className="w-6 text-sm text-muted-foreground">{day}</div>
+                            {weeklyStats && weeklyStats.alcohol_by_weekday
+                                ? Object.entries(weeklyStats.alcohol_by_weekday).map(([en, value]) => (
+                                    <div key={en} className="flex items-center gap-3">
+                                        <div className="w-6 text-sm text-muted-foreground">{weekdayMap[en] || en}</div>
                                         <div className="flex-1 bg-muted rounded-full h-3 overflow-hidden">
                                             <div
                                                 className="h-full bg-primary rounded-full transition-all"
-                                                style={{ width: `${Math.min(value * 2, 100)}%` }}
+                                                style={{ width: `${Math.min(Number(value) * 2, 100)}%` }}
                                             />
                                         </div>
-                                        <div className="w-12 text-sm text-right">{value}g</div>
+                                        <div className="w-12 text-sm text-right">{String(value)}ml</div>
                                     </div>
-                                )
-                            })}
+                                ))
+                                : <div className="text-muted-foreground text-sm">データがありません</div>
+                            }
                         </div>
                     </CardContent>
                 </Card>
@@ -346,24 +373,29 @@ export default function HomePage() {
                         <CardTitle className="text-lg">最近の記録</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
+                        {recentLogs.length === 0 && (
+                            <div className="text-muted-foreground text-sm">記録がありません</div>
+                        )}
                         {recentLogs.map((log) => (
                             <div key={log.id} className="p-4 bg-muted/50 rounded-xl space-y-2">
                                 <div className="flex items-center justify-between">
-                                    <div className="text-sm text-muted-foreground">{log.date}</div>
+                                    <div className="text-sm text-muted-foreground">
+                                        {log.drink_date ? log.drink_date.slice(0, 10) : ""}
+                                    </div>
                                     <Badge variant="secondary" className="text-xs">
-                                        {log.alcohol}g
+                                        {log.drinks.reduce((sum: number, d: any) => sum + d.amount_ml, 0)}ml
                                     </Badge>
                                 </div>
                                 <div className="space-y-1">
-                                    {log.drinks.map((drink, index) => (
+                                    {log.drinks.map((drink: any, index: number) => (
                                         <div key={index} className="text-sm">
-                                            {drink}
+                                            {drink.name} {drink.amount_ml}ml（{drink.abv}%）
                                         </div>
                                     ))}
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    {getMoodIcon(log.mood)}
-                                    <span className="text-sm text-muted-foreground">{log.mood}</span>
+                                    {/* コメントや気分など必要に応じて */}
+                                    <span className="text-sm text-muted-foreground">{log.comment}</span>
                                 </div>
                             </div>
                         ))}
