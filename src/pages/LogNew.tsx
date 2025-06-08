@@ -57,14 +57,6 @@ export default function LogNew() {
         navigate(-1)
     }
 
-    const handleCancel = () => {
-        navigate(-1)
-    }
-
-    const handleCancel = () => {
-        navigate(-1)
-    }
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target
         setFormData(prev => ({
