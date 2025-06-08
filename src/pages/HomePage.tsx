@@ -145,6 +145,8 @@ export default function HomePage() {
             // ログインページへリダイレクト
             navigate("/login");
         }
+    };
+
     // 曜日を日本語に変換
     const weekdayMap: Record<string, string> = {
         "Mon": "月",
