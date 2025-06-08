@@ -145,6 +145,7 @@ export default function HomePage() {
             // ログインページへリダイレクト
             navigate("/login");
         }
+    }
     // 曜日を日本語に変換
     const weekdayMap: Record<string, string> = {
         "Mon": "月",
@@ -373,10 +374,10 @@ export default function HomePage() {
                         <CardTitle className="text-lg">最近の記録</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        {recentLogs.length === 0 && (
+                        {recentLogs && recentLogs.length === 0 && (
                             <div className="text-muted-foreground text-sm">記録がありません</div>
                         )}
-                        {recentLogs.map((log) => (
+                        {recentLogs && recentLogs.map((log) => (
                             <div key={log.id} className="p-4 bg-muted/50 rounded-xl space-y-2">
                                 <div className="flex items-center justify-between">
                                     <div className="text-sm text-muted-foreground">
@@ -422,16 +423,6 @@ export default function HomePage() {
                 </DialogContent>
             </Dialog>
 
-            {/* Floating Action Button */}
-            <Link to="/log/new">
-                <Button
-                    size="lg"
-                    className="fixed bottom-20 right-6 h-16 w-16 rounded-full bg-primary hover:bg-accent shadow-xl border-4 border-background z-10"
-                >
-                    <Plus className="h-8 w-8" />
-                </Button>
-            </Link>
-
             {/* Bottom Navigation */}
             <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-muted">
                 <div className="flex">
@@ -446,6 +437,16 @@ export default function HomePage() {
                     </Link>
                 </div>
             </nav>
+
+            {/* Floating Action Button */}
+            <Link to="/log/new">
+                <Button
+                    size="lg"
+                    className="fixed bottom-20 right-6 h-16 w-16 rounded-full bg-primary hover:bg-accent shadow-xl border-4 border-background z-10"
+                >
+                    <Plus className="h-8 w-8" />
+                </Button>
+            </Link>
         </div>
     )
 }

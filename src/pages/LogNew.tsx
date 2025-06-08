@@ -32,6 +32,10 @@ export default function LogNew() {
         }
     }
 
+    const handleCancel = () => {
+        navigate(-1)
+    }
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target
         setFormData(prev => ({
@@ -165,6 +169,14 @@ export default function LogNew() {
 
                             <Button type="submit" className="w-full">
                                 記録を保存
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                className="flex-1 border-muted hover:bg-muted"
+                                onClick={handleCancel}
+                            >
+                                キャンセル
                             </Button>
                         </form>
                     </CardContent>
