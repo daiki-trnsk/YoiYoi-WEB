@@ -16,16 +16,34 @@ export default function Signup() {
     })
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
+        e.preventDefault();
         try {
-            // TODO: 実際の新規登録処理を実装
-            console.log("新規登録を開始します", formData)
-            // 仮の登録成功処理
-            navigate("/home")
-        } catch (error) {
-            console.error("登録に失敗しました:", error)
+          const res = await fetch('https://yoiyoi-api-dev.onrender.com/auth/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              username: formData.name,
+              email: formData.email,
+              password: formData.password
+            })
+          });
+      
+          const data = await res.json();
+          console.log(data);
+      
+          // 成功時
+          if (res.ok && data.access_token) {
+            localStorage.setItem('access_token', data.access_token);
+            console.log('トークン:', data.access_token)
+            // navigate('/home');
+          } else {
+            // 失敗時
+            alert(data.message || '新規登録に失敗しました');
+          }
+        } catch (err) {
+          alert('通信エラー');
         }
-    }
+      };      
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target

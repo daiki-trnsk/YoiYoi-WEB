@@ -1,10 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&display=swap');
+@import "@radix-ui/themes/styles.css"; 
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import "@radix-ui/themes/styles.css"; 
+
 
 @layer base {
   :root {
