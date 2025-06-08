@@ -18,32 +18,32 @@ export default function Signup() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-          const res = await fetch('https://yoiyoi-api-dev.onrender.com/auth/signup', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              username: formData.name,
-              email: formData.email,
-              password: formData.password
-            })
-          });
-      
-          const data = await res.json();
-          console.log(data);
-      
-          // 成功時
-          if (res.ok && data.access_token) {
-            localStorage.setItem('access_token', data.access_token);
-            console.log('トークン:', data.access_token)
-            // navigate('/home');
-          } else {
-            // 失敗時
-            alert(data.message || '新規登録に失敗しました');
-          }
+            const res = await fetch('https://yoiyoi-api-dev.onrender.com/auth/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: formData.name,
+                    email: formData.email,
+                    password: formData.password
+                })
+            });
+
+            const data = await res.json();
+            console.log(data);
+
+            // 成功時
+            if (res.ok && data.access_token) {
+                localStorage.setItem('access_token', data.access_token);
+                console.log('トークン:', data.access_token)
+                // navigate('/home');
+            } else {
+                // 失敗時
+                alert(data.message || '新規登録に失敗しました');
+            }
         } catch (err) {
-          alert('通信エラー');
+            alert('通信エラー');
         }
-      };      
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target
@@ -65,7 +65,7 @@ export default function Signup() {
                     <Card className="w-full">
                         <CardContent className="p-6 space-y-4">
                             <h2 className="text-xl font-semibold text-center">新規登録</h2>
-                            
+
                             <form onSubmit={handleSubmit} className="space-y-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="name">お名前</Label>

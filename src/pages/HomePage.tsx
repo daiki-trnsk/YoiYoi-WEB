@@ -101,7 +101,7 @@ export default function HomePage() {
             <header className="px-4 py-6 border-b border-muted">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <img src={logo} alt="YoiYoi Logo" className="h-6 w-6" />
+                        <img src={logo} alt="YoiYoi Logo" className="h-12 w-12 md:h-16 md:w-16 lg:h-20 lg:w-20" />
                         <h1 className="text-xl font-bold">YoiYoi</h1>
                     </div>
                     <Link to="/stats">
